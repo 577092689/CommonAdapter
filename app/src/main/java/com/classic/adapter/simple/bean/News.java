@@ -1,12 +1,5 @@
 package com.classic.adapter.simple.bean;
 
-/**
- * 项目名称：CommonAdapter
- * 包名称：com.classic.adapter.simple.bean
- * 类描述：
- * 创建人： 刘宾
- * 创建时间 2016/1/25 14:22.
- */
 public class News {
 
     /** 单图布局样式 */

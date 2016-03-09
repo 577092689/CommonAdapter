@@ -3,13 +3,6 @@ package com.classic.adapter.simple.data;
 import com.classic.adapter.simple.bean.News;
 import java.util.ArrayList;
 
-/**
- * 项目名称：CommonAdapter
- * 包名称：com.classic.adapter.simple.data
- * 类描述：
- * 创建人： 刘宾
- * 创建时间 2016/1/25 14:41.
- */
 public final class NewsDataSource {
     private static final String AUTHOR = "续写经典";
     private static ArrayList<News> newsList;

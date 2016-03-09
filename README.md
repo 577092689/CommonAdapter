@@ -12,11 +12,10 @@ ListView/GridView 使用示例
 ```java
 List<News> newsList = ...;
 //单布局文件
-listView.setAdapter(new CommonAdapter<News>(context,  //上下文对象
+listView = (ListView) findViewById(R.id.listview);
+listView.setAdapter(new CommonAdapter<News>(context,
     //item布局文件
-    R.layout.item_none_picture,
-    //List数据
-    newsList ) {
+    R.layout.item_none_picture, newsList ) {
     @Override public void onUpdate(BaseAdapterHelper helper, News item) {
         //BaseAdapterHelper详细用法，见下方
 
@@ -202,9 +201,9 @@ helper.setText(R.id.viewId, "text")
       .setOnItemLongClickListener(R.id.viewId, AdapterView.OnItemLongClickListener)
       .setOnItemSelectedClickListener(R.id.viewId, AdapterView.OnItemSelectedListener);
 
-//获取列表当前position
+//获取当前position
 int position = helper.getPosition();
-//获取列表item的convertView
+//获取item的convertView
 View convertView = helper.getView();
 
 //如果上面的属性不够用,可以通过下面方式拿到View,然后进行属性设置
@@ -214,7 +213,7 @@ View childView = helper.getView(R.id.viewId);
 
 自定义图片加载
 ```java
-public class YourClassXXX implements ImageLoad {
+public class YourXXX implements ImageLoad {
 
     @Override public void load(Context context, ImageView imageView, String imageUrl) {
 
@@ -228,7 +227,10 @@ public class YourClassXXX implements ImageLoad {
 
         or
 
-        fresco 、 Android-Universal-Image-Loader 、其它自定义 ...
+        fresco
+        Android-Universal-Image-Loader
+        其它自定义
+        ...
     }
 }
 ```
