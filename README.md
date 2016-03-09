@@ -1,4 +1,9 @@
-一个适用于ListView/GridView/RecyclerView的Adapter库,简化大量重复代码,支持多布局,可自定义图片加载的实现。
+- 简化大量重复代码
+- 支持多布局
+- 自定义图片加载
+- 常用数据操作
+- view复用
+- RecyclerView item 点击和长按事件
 
 ##gradle依赖
 ```gradle
@@ -7,7 +12,7 @@ dependencies {
 }
 ```
 
-##代码示例
+##开始使用
 ListView/GridView 使用示例
 ```java
 List<News> newsList = ...;
