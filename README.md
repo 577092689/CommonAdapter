@@ -1,6 +1,6 @@
-一个适用于ListView/GridView/RecyclerView的Adapter库,简化大量重复代码,支持多种布局,可自定义图片加载的实现。
+一个适用于ListView/GridView/RecyclerView的Adapter库,简化大量重复代码,支持多布局,可自定义图片加载的实现。
 
-##使用
+##gradle依赖
 ```gradle
 dependencies {
     compile 'com.classic.adapter:commonadapter:1.0'
@@ -163,12 +163,12 @@ CommonAdapter、CommonRecyclerAdapter区别
 ```java
 CommonAdapter适用于：ListView/GridView
 CommonRecyclerAdapter适用于：RecyclerView
-只是类名不一样，使用方式都一样。
+使用方式都一样
 ```
 
 BaseAdapterHelper 使用示例
 ```java
-helper.setText(R.id.viewId, "text")
+helper.setText(R.id.viewId, text)
       .setTag(R.id.viewId, objectTag)
       .setAlpha(R.id.viewId, 0.6f)
       .setBackgroundColor(R.id.viewId, R.color.colorResId)
@@ -177,7 +177,7 @@ helper.setText(R.id.viewId, "text")
       .setImageBitmap(R.id.viewId,bitmap)
       .setImageDrawable(R.id.viewId,drawable)
       .setImageResource(R.id.viewId, R.drawable.drawableResId)
-      .setImageUrl(R.id.viewId, "url")
+      .setImageUrl(R.id.viewId, url)
       .setProgress(R.id.viewId,progress)
       .setProgress(R.id.viewId,progress,max)
       .setRating(R.id.viewId, rating)
@@ -206,7 +206,7 @@ int position = helper.getPosition();
 //获取item的convertView
 View convertView = helper.getView();
 
-//如果上面的属性不够用,可以通过下面方式拿到View,然后进行属性设置
+//如果上面的属性不够用,可以通过getView(viewId)拿到View,然后进行属性设置
 View childView = helper.getView(R.id.viewId);
 
 ```
@@ -239,7 +239,7 @@ public class YourXXX implements ImageLoad {
 ```java
 //加载网络图片之前，请调用setImageLoad方法，设置网络图片加载的实现类
 helper.setImageLoad(new GlideImageLoad());
-helper.setImageUrl(R.id.xxx,item.getCoverUrl());
+helper.setImageUrl(R.id.xxx,url);
 ```
 
 常用的数据操作
