@@ -5,12 +5,18 @@
 - view复用
 - RecyclerView item 点击和长按事件
 
+
+![](https://github.com/qyxxjd/CommonAdapter/blob/master/screenshots/main.png)
+![](https://github.com/qyxxjd/CommonAdapter/blob/master/screenshots/simple.png)
+![](https://github.com/qyxxjd/CommonAdapter/blob/master/screenshots/multiple.png)
+
+
 ##gradle依赖
 ```gradle
 dependencies {
     compile 'com.classic.adapter:commonadapter:1.0'
     //项目中使用到RecyclerView,需要添加依赖
-    compile 'com.android.support:recyclerview-v7:23.2.0'
+    compile 'com.android.support:recyclerview-v7:23.2.1'
 }
 ```
 
@@ -23,7 +29,7 @@ listView = (ListView) findViewById(R.id.listview);
 listView.setAdapter(new CommonAdapter<News>(context,
     //item布局文件
     R.layout.item_none_picture, newsList ) {
-    @Override public void onUpdate(BaseAdapterHelper helper, News item) {
+    @Override public void onUpdate(BaseAdapterHelper helper, News item, int position) {
         //BaseAdapterHelper详细用法，见下方
 
         helper.setText(R.id.xxx, item.getTitle())
@@ -58,7 +64,7 @@ private final class MultipleLayoutAdapter extends CommonAdapter<News>{
         return layoutResId;
     }
 
-    @Override public void onUpdate(BaseAdapterHelper helper, News item) {
+    @Override public void onUpdate(BaseAdapterHelper helper, News item, int position) {
         helper.setImageLoad(new GlideImageLoad());
         switch (item.getNewsType()){
             case News.TYPE_NONE_PICTURE: //布局样式一
@@ -96,7 +102,7 @@ private class NewsAdapter extends CommonRecyclerAdapter<News>{
         super(context, layoutResId, data);
     }
 
-    @Override public void onUpdate(BaseAdapterHelper helper, News item) {
+    @Override public void onUpdate(BaseAdapterHelper helper, News item, int position) {
         helper.setText(R.id.xxx, item.getTitle())
               .setImageLoad(new GlideImageLoad())
               .setImageUrl(R.id.xxx,item.getCoverUrl());
@@ -128,7 +134,7 @@ private final class MultipleLayoutAdapter extends CommonRecyclerAdapter<News>{
         return layoutResId;
     }
 
-    @Override public void onUpdate(BaseAdapterHelper helper, News item) {
+    @Override public void onUpdate(BaseAdapterHelper helper, News item, int position) {
         helper.setImageLoad(new GlideImageLoad());
         switch (item.getNewsType()){
             case News.TYPE_NONE_PICTURE: //布局样式一
@@ -208,8 +214,6 @@ helper.setText(R.id.viewId, text)
       .setOnItemLongClickListener(R.id.viewId, AdapterView.OnItemLongClickListener)
       .setOnItemSelectedClickListener(R.id.viewId, AdapterView.OnItemSelectedListener);
 
-//获取当前position
-int position = helper.getPosition();
 //获取item的convertView
 View convertView = helper.getView();
 
