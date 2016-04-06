@@ -29,7 +29,7 @@ public class ListViewSimpleActivity extends AppCompatActivity {
         listView = (ListView) findViewById(R.id.listview);
         listView.setAdapter(new CommonAdapter<News>(this, R.layout.item_none_picture,
             NewsDataSource.getNewsList()) {
-            @Override public void onUpdate(BaseAdapterHelper helper, News item) {
+            @Override public void onUpdate(BaseAdapterHelper helper, News item, int position) {
                 helper.setText(R.id.item_none_picture_title, item.getTitle())
                     .setText(R.id.item_none_picture_author, String.format(Locale.CHINA, Consts.FORMAT_AUTHOR, item.getAuthor()))
                     .setText(R.id.item_none_picture_date, Consts.DATE_FORMAT.format(new Date(item.getReleaseTime())))

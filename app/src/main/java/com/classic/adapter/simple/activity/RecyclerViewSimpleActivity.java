@@ -58,7 +58,7 @@ public class RecyclerViewSimpleActivity extends AppCompatActivity implements
             super(context, layoutResId, data);
         }
 
-        @Override public void onUpdate(BaseAdapterHelper helper, News item) {
+        @Override public void onUpdate(BaseAdapterHelper helper, News item, int position) {
             helper.setText(R.id.item_none_picture_title, item.getTitle())
                 .setText(R.id.item_none_picture_author,
                     String.format(Locale.CHINA, Consts.FORMAT_AUTHOR, item.getAuthor()))

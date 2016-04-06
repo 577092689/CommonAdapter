@@ -53,7 +53,7 @@ public class ListViewActivity extends AppCompatActivity {
             return layoutResId;
         }
 
-        @Override public void onUpdate(BaseAdapterHelper helper, News item) {
+        @Override public void onUpdate(BaseAdapterHelper helper, News item, int position) {
             switch (item.getNewsType()){
                 case News.TYPE_NONE_PICTURE:
                     helper.setText(R.id.item_none_picture_title, item.getTitle())
