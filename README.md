@@ -6,9 +6,7 @@
 - RecyclerView item 点击和长按事件
 
 
-![](https://github.com/qyxxjd/CommonAdapter/blob/master/screenshots/main.png)
-![](https://github.com/qyxxjd/CommonAdapter/blob/master/screenshots/simple.png)
-![](https://github.com/qyxxjd/CommonAdapter/blob/master/screenshots/multiple.png)
+![](https://github.com/qyxxjd/CommonAdapter/blob/master/screenshots/main.png)  ![](https://github.com/qyxxjd/CommonAdapter/blob/master/screenshots/simple.png)  ![](https://github.com/qyxxjd/CommonAdapter/blob/master/screenshots/multiple.png)
 
 
 ##gradle依赖
