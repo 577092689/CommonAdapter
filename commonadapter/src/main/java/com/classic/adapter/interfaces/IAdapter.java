@@ -11,7 +11,7 @@ import com.classic.adapter.BaseAdapterHelper;
  */
 public interface IAdapter<T> {
 
-    void onUpdate(BaseAdapterHelper helper, T item);
+    void onUpdate(BaseAdapterHelper helper, T item, int position);
 
     int getLayoutResId(T item);
 }

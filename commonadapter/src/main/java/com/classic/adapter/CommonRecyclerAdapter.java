@@ -41,7 +41,7 @@ public abstract class CommonRecyclerAdapter<T> extends RecyclerView.Adapter impl
     @Override public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         BaseAdapterHelper helper = ((RecyclerViewHolder)holder).adapterHelper;
         helper.setAssociatedObject(getItem(position));
-        onUpdate(helper, getItem(position));
+        onUpdate(helper, getItem(position), position);
     }
 
     @Override public int getItemViewType(int position) {

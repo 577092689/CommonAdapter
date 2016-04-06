@@ -58,7 +58,7 @@ public abstract class CommonAdapter<T> extends BaseAdapter implements IData<T>,I
         final T item = getItem(position);
         final BaseAdapterHelper helper =
             get(context, convertView, parent, getLayoutResId(item), position);
-        onUpdate(helper, item);
+        onUpdate(helper, item, position);
         helper.setAssociatedObject(item);
         return helper.getView();
     }
