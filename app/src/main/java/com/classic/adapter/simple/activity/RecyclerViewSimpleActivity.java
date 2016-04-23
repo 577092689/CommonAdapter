@@ -21,8 +21,9 @@ import java.util.Locale;
 
 public class RecyclerViewSimpleActivity extends AppCompatActivity implements
     CommonRecyclerAdapter.OnItemClickListener, CommonRecyclerAdapter.OnItemLongClickListener {
-    private RecyclerView recyclerView;
-    private NewsAdapter newsAdapter;
+    private RecyclerView mRecyclerView;
+    private NewsAdapter  mNewsAdapter;
+
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,19 +32,19 @@ public class RecyclerViewSimpleActivity extends AppCompatActivity implements
         getSupportActionBar().setTitle(R.string.main_recyclerview_simple_lable);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        newsAdapter = new NewsAdapter(this, R.layout.item_none_picture,
-            NewsDataSource.getNewsList());
-        newsAdapter.setOnItemClickListener(this);
-        newsAdapter.setOnItemLongClickListener(this);
-        recyclerView.setAdapter(newsAdapter);
-
+        mRecyclerView = (RecyclerView) findViewById(R.id.recyclerview);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        mNewsAdapter = new NewsAdapter(this, R.layout.item_none_picture,
+                NewsDataSource.getNewsList());
+        mNewsAdapter.setOnItemClickListener(this);
+        mNewsAdapter.setOnItemLongClickListener(this);
+        mRecyclerView.setAdapter(mNewsAdapter);
     }
 
-    @Override public void onItemClick(RecyclerView.ViewHolder viewHolder,View view, int position) {
+
+    @Override public void onItemClick(RecyclerView.ViewHolder viewHolder, View view, int position) {
         Toast.makeText(RecyclerViewSimpleActivity.this, "RecyclerView onItemClick,position:" + position,
             Toast.LENGTH_SHORT).show();
     }

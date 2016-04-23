@@ -19,90 +19,96 @@ import static com.classic.adapter.BaseAdapterHelper.get;
  * 创建时间: 2016/1/27 17:50.
  */
 public abstract class CommonAdapter<T> extends BaseAdapter implements IData<T>, IAdapter<T> {
-    protected final Context context;
-    protected final int layoutResId;
-    protected final List<T> data;
+    protected final Context mContext;
+    protected final int     mLayoutResId;
+    protected final List<T> mData;
+
 
     public CommonAdapter(Context context, int layoutResId) {
         this(context, layoutResId, null);
     }
 
+
     public CommonAdapter(Context context, int layoutResId, List<T> data) {
-        this.data = data == null ? new ArrayList<T>() : new ArrayList<>(data);
-        this.context = context;
-        this.layoutResId = layoutResId;
+        this.mData = data == null ? new ArrayList<T>() : new ArrayList<>(data);
+        this.mContext = context;
+        this.mLayoutResId = layoutResId;
     }
+
 
     @Override public int getCount() {
-        return data.size();
+        return mData.size();
     }
 
+
     @Override public T getItem(int position) {
-        return position >= data.size() ? null : data.get(position);
+        return position >= mData.size() ? null : mData.get(position);
     }
+
 
     @Override public long getItemId(int position) {
         return position;
     }
 
+
     @Override public int getLayoutResId(T item) {
-        return this.layoutResId;
+        return this.mLayoutResId;
     }
 
     @Override public View getView(int position, View convertView, ViewGroup parent) {
         final T item = getItem(position);
         final BaseAdapterHelper helper =
-            get(context, convertView, parent, getLayoutResId(item), position);
+            get(mContext, convertView, parent, getLayoutResId(item), position);
         onUpdate(helper, item, position);
         helper.setAssociatedObject(item);
         return helper.getView();
     }
 
     @Override public boolean isEnabled(int position) {
-        return position < data.size();
+        return position < mData.size();
     }
 
     @Override public void add(T elem) {
-        data.add(elem);
+        mData.add(elem);
         notifyDataSetChanged();
     }
 
     @Override public void addAll(List<T> elem) {
-        data.addAll(elem);
+        mData.addAll(elem);
         notifyDataSetChanged();
     }
 
     @Override public void set(T oldElem, T newElem) {
-        set(data.indexOf(oldElem), newElem);
+        set(mData.indexOf(oldElem), newElem);
     }
 
     @Override public void set(int index, T elem) {
-        data.set(index, elem);
+        mData.set(index, elem);
         notifyDataSetChanged();
     }
 
     @Override public void remove(T elem) {
-        data.remove(elem);
+        mData.remove(elem);
         notifyDataSetChanged();
     }
 
     @Override public void remove(int index) {
-        data.remove(index);
+        mData.remove(index);
         notifyDataSetChanged();
     }
 
     @Override public void replaceAll(List<T> elem) {
-        data.clear();
-        data.addAll(elem);
+        mData.clear();
+        mData.addAll(elem);
         notifyDataSetChanged();
     }
 
     @Override public boolean contains(T elem) {
-        return data.contains(elem);
+        return mData.contains(elem);
     }
 
     @Override public void clear() {
-        data.clear();
+        mData.clear();
         notifyDataSetChanged();
     }
 }

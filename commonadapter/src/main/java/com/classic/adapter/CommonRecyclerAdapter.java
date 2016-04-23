@@ -20,24 +20,28 @@ import static com.classic.adapter.BaseAdapterHelper.get;
  */
 public abstract class CommonRecyclerAdapter<T> extends RecyclerView.Adapter
     implements IAdapter<T>, IData<T> {
-    protected final Context context;
-    protected final int layoutResId;
-    protected final List<T> data;
+    protected final Context mContext;
+    protected final int     mLayoutResId;
+    protected final List<T> mData;
+
 
     public CommonRecyclerAdapter(Context context, int layoutResId) {
         this(context, layoutResId, null);
     }
 
+
     public CommonRecyclerAdapter(Context context, int layoutResId, List<T> data) {
-        this.data = data == null ? new ArrayList<T>() : new ArrayList<>(data);
-        this.context = context;
-        this.layoutResId = layoutResId;
+        this.mData = data == null ? new ArrayList<T>() : new ArrayList<>(data);
+        this.mContext = context;
+        this.mLayoutResId = layoutResId;
     }
 
+
     @Override public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        final BaseAdapterHelper helper = get(context, null, parent, viewType, -1);
+        final BaseAdapterHelper helper = get(mContext, null, parent, viewType, -1);
         return new RecyclerViewHolder(helper.getView(), helper);
     }
+
 
     @Override public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         BaseAdapterHelper helper = ((RecyclerViewHolder) holder).adapterHelper;
@@ -54,15 +58,15 @@ public abstract class CommonRecyclerAdapter<T> extends RecyclerView.Adapter
     }
 
     public T getItem(int position) {
-        return position >= data.size() ? null : data.get(position);
+        return position >= mData.size() ? null : mData.get(position);
     }
 
     @Override public int getItemCount() {
-        return data.size();
+        return mData.size();
     }
 
     @Override public int getLayoutResId(T item) {
-        return this.layoutResId;
+        return this.mLayoutResId;
     }
 
     public class RecyclerViewHolder extends RecyclerView.ViewHolder {
@@ -113,47 +117,47 @@ public abstract class CommonRecyclerAdapter<T> extends RecyclerView.Adapter
     }
 
     @Override public void add(T elem) {
-        data.add(elem);
-        notifyItemInserted(data.size());
+        mData.add(elem);
+        notifyItemInserted(mData.size());
     }
 
     @Override public void addAll(List<T> elem) {
-        data.addAll(elem);
-        notifyItemRangeInserted(data.size() - elem.size(), elem.size());
+        mData.addAll(elem);
+        notifyItemRangeInserted(mData.size() - elem.size(), elem.size());
     }
 
     @Override public void set(T oldElem, T newElem) {
-        set(data.indexOf(oldElem), newElem);
+        set(mData.indexOf(oldElem), newElem);
     }
 
     @Override public void set(int index, T elem) {
-        data.set(index, elem);
+        mData.set(index, elem);
         notifyItemChanged(index);
     }
 
     @Override public void remove(T elem) {
-        final int position = data.indexOf(elem);
-        data.remove(elem);
+        final int position = mData.indexOf(elem);
+        mData.remove(elem);
         notifyItemRemoved(position);
     }
 
     @Override public void remove(int index) {
-        data.remove(index);
+        mData.remove(index);
         notifyItemRemoved(index);
     }
 
     @Override public void replaceAll(List<T> elem) {
-        data.clear();
-        data.addAll(elem);
+        mData.clear();
+        mData.addAll(elem);
         notifyDataSetChanged();
     }
 
     @Override public boolean contains(T elem) {
-        return data.contains(elem);
+        return mData.contains(elem);
     }
 
     @Override public void clear() {
-        data.clear();
+        mData.clear();
         notifyDataSetChanged();
     }
 }

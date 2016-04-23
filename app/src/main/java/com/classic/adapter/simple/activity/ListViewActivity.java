@@ -17,7 +17,8 @@ import java.util.List;
 import java.util.Locale;
 
 public class ListViewActivity extends AppCompatActivity {
-    private ListView listView;
+    private ListView mListView;
+
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,12 +27,13 @@ public class ListViewActivity extends AppCompatActivity {
         getSupportActionBar().setTitle(R.string.main_listview_lable);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        listView = (ListView) findViewById(R.id.listview);
-        listView.setAdapter(new MultipleLayoutAdapter(this, R.layout.item_none_picture,
-            NewsDataSource.getNewsList()));
+        mListView = (ListView) findViewById(R.id.listview);
+        mListView.setAdapter(new MultipleLayoutAdapter(this, R.layout.item_none_picture,
+                NewsDataSource.getNewsList()));
     }
 
-    private final class MultipleLayoutAdapter extends CommonAdapter<News>{
+
+    private final class MultipleLayoutAdapter extends CommonAdapter<News> {
 
         public MultipleLayoutAdapter(Context context, int layoutResId, List<News> data) {
             super(context, layoutResId, data);

@@ -17,7 +17,8 @@ import java.util.Date;
 import java.util.Locale;
 
 public class ListViewSimpleActivity extends AppCompatActivity {
-    private ListView listView;
+    private ListView mListView;
+
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,14 +27,16 @@ public class ListViewSimpleActivity extends AppCompatActivity {
         getSupportActionBar().setTitle(R.string.main_listview_simple_lable);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        listView = (ListView) findViewById(R.id.listview);
-        listView.setAdapter(new CommonAdapter<News>(this, R.layout.item_none_picture,
-            NewsDataSource.getNewsList()) {
+        mListView = (ListView) findViewById(R.id.listview);
+        mListView.setAdapter(new CommonAdapter<News>(this, R.layout.item_none_picture,
+                NewsDataSource.getNewsList()) {
             @Override public void onUpdate(BaseAdapterHelper helper, News item, int position) {
                 helper.setText(R.id.item_none_picture_title, item.getTitle())
-                    .setText(R.id.item_none_picture_author, String.format(Locale.CHINA, Consts.FORMAT_AUTHOR, item.getAuthor()))
-                    .setText(R.id.item_none_picture_date, Consts.DATE_FORMAT.format(new Date(item.getReleaseTime())))
-                    .setText(R.id.item_none_picture_intro, item.getIntro());
+                      .setText(R.id.item_none_picture_author,
+                              String.format(Locale.CHINA, Consts.FORMAT_AUTHOR, item.getAuthor()))
+                      .setText(R.id.item_none_picture_date,
+                              Consts.DATE_FORMAT.format(new Date(item.getReleaseTime())))
+                      .setText(R.id.item_none_picture_intro, item.getIntro());
             }
         });
 

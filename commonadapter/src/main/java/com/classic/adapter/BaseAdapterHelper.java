@@ -39,37 +39,30 @@ import com.classic.adapter.interfaces.ImageLoad;
 /**
  * @author Joan Zapata
  * Allows an abstraction of the ViewHolder pattern.
- * return BaseAdapterHelper.get(context, convertView, parent, R.layout.item)
- *         .setText(R.id.tvName, contact.getName())
- *         .setText(R.id.tvEmails, contact.getEmails().toString())
- *         .setText(R.id.tvNumbers, contact.getNumbers().toString())
- *         .getView();
  */
 public class BaseAdapterHelper {
 
     /** Views indexed with their IDs */
-    private final SparseArray<View> views;
+    private final SparseArray<View> mViews;
+    private final Context           mContext;
 
-    private final Context context;
-
-    private int position;
-    private int layoutId;
-
-    private View convertView;
-
+    private View        mConvertView;
+    private int         mPosition;
+    private int         mLayoutId;
+    private ImageLoad   mImageLoad;
     /** Package private field to retain the associated user object and detect a change */
-    Object associatedObject;
+    Object mAssociatedObject;
 
-    private ImageLoad imageLoad;
 
     protected BaseAdapterHelper(Context context, ViewGroup parent, int layoutId, int position) {
-        this.context = context;
-        this.position = position;
-        this.layoutId = layoutId;
-        this.views = new SparseArray<>();
-        convertView = LayoutInflater.from(context).inflate(layoutId, parent, false);
-        convertView.setTag(this);
+        this.mContext = context;
+        this.mPosition = position;
+        this.mLayoutId = layoutId;
+        this.mViews = new SparseArray<>();
+        mConvertView = LayoutInflater.from(context).inflate(layoutId, parent, false);
+        mConvertView.setTag(this);
     }
+
 
     /**
      * This method is the only entry point to get a BaseAdapterHelper.
@@ -82,7 +75,7 @@ public class BaseAdapterHelper {
         return get(context, convertView, parent, layoutId, -1);
     }
 
-    /** This method is package private and should only be used by QuickAdapter. */
+
     static BaseAdapterHelper get(Context context, View convertView, ViewGroup parent, int layoutId, int position) {
         if (convertView == null) {
             return new BaseAdapterHelper(context, parent, layoutId, position);
@@ -91,13 +84,14 @@ public class BaseAdapterHelper {
         // Retrieve the existing helper and update its position
         BaseAdapterHelper existingHelper = (BaseAdapterHelper) convertView.getTag();
 
-        if(existingHelper.layoutId != layoutId){
+        if (existingHelper.mLayoutId != layoutId) {
             return new BaseAdapterHelper(context, parent, layoutId, position);
         }
 
-        existingHelper.position = position;
+        existingHelper.mPosition = position;
         return existingHelper;
     }
+
 
     /**
      * This method allows you to retrieve a view and perform custom
@@ -109,6 +103,7 @@ public class BaseAdapterHelper {
     public <T extends View> T getView(int viewId) {
         return retrieveView(viewId);
     }
+
 
     /**
      * Will set the text of a TextView.
@@ -178,7 +173,7 @@ public class BaseAdapterHelper {
      */
     public BaseAdapterHelper setTextColorRes(int viewId, int textColorRes) {
         TextView view = retrieveView(viewId);
-        view.setTextColor(context.getResources().getColor(textColorRes));
+        view.setTextColor(mContext.getResources().getColor(textColorRes));
         return this;
     }
 
@@ -202,15 +197,15 @@ public class BaseAdapterHelper {
      */
     public BaseAdapterHelper setImageUrl(int viewId, String imageUrl) {
         ImageView view = retrieveView(viewId);
-        if(null != this.imageLoad){
-            this.imageLoad.load(context, view, imageUrl);
+        if(null != this.mImageLoad){
+            this.mImageLoad.load(mContext, view, imageUrl);
         }
         return this;
     }
 
     /** Custom network load images */
     public BaseAdapterHelper setImageLoad(ImageLoad imageLoad){
-        this.imageLoad = imageLoad;
+        this.mImageLoad = imageLoad;
         return this;
     }
 
@@ -461,39 +456,39 @@ public class BaseAdapterHelper {
         return this;
     }
 
-    /** Retrieve the convertView */
+    /** Retrieve the mConvertView */
     public View getView() {
-        return convertView;
+        return mConvertView;
     }
 
     /**
-     * Retrieve the overall position of the data in the list.
-     * @throws IllegalArgumentException If the position hasn't been set at the construction of the this helper.
+     * Retrieve the overall mPosition of the mData in the list.
+     * @throws IllegalArgumentException If the mPosition hasn't been set at the construction of the this helper.
      */
     public int getPosition() {
-        if (position == -1)
+        if (mPosition == -1)
             throw new IllegalStateException("Use BaseAdapterHelper constructor " +
-                    "with position if you need to retrieve the position.");
-        return position;
+                    "with mPosition if you need to retrieve the mPosition.");
+        return mPosition;
     }
 
     @SuppressWarnings("unchecked")
     protected <T extends View> T retrieveView(int viewId) {
-        View view = views.get(viewId);
+        View view = mViews.get(viewId);
         if (view == null) {
-            view = convertView.findViewById(viewId);
-            views.put(viewId, view);
+            view = mConvertView.findViewById(viewId);
+            mViews.put(viewId, view);
         }
         return (T) view;
     }
 
     /** Retrieves the last converted object on this view. */
     public Object getAssociatedObject() {
-        return associatedObject;
+        return mAssociatedObject;
     }
 
     /** Should be called during convert */
     public void setAssociatedObject(Object associatedObject) {
-        this.associatedObject = associatedObject;
+        this.mAssociatedObject = associatedObject;
     }
 }
