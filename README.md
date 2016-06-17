@@ -1,3 +1,5 @@
+[![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-CommonAdapter-brightgreen.svg?style=flat)](http://android-arsenal.com/details/1/3727)
+
 - 简化大量重复代码
 - 支持多布局
 - 自定义图片加载
@@ -14,7 +16,7 @@
 dependencies {
     compile 'com.classic.adapter:commonadapter:1.1'
     //项目中使用到RecyclerView,需要添加依赖
-    compile 'com.android.support:recyclerview-v7:23.2.1'
+    compile 'com.android.support:recyclerview-v7:23.4.0'
 }
 ```
 
