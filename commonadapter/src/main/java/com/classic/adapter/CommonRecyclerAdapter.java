@@ -50,7 +50,7 @@ public abstract class CommonRecyclerAdapter<T> extends RecyclerView.Adapter
     }
 
     @Override public int getItemViewType(int position) {
-        return getLayoutResId(getItem(position));
+        return getLayoutResId(getItem(position), position);
     }
 
     @Override public long getItemId(int position) {
@@ -65,7 +65,7 @@ public abstract class CommonRecyclerAdapter<T> extends RecyclerView.Adapter
         return mData.size();
     }
 
-    @Override public int getLayoutResId(T item) {
+    @Override public int getLayoutResId(T item, int position) {
         return this.mLayoutResId;
     }
 

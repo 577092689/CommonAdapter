@@ -51,14 +51,14 @@ public abstract class CommonAdapter<T> extends BaseAdapter implements IData<T>, 
     }
 
 
-    @Override public int getLayoutResId(T item) {
+    @Override public int getLayoutResId(T item, int position) {
         return this.mLayoutResId;
     }
 
     @Override public View getView(int position, View convertView, ViewGroup parent) {
         final T item = getItem(position);
         final BaseAdapterHelper helper =
-            get(mContext, convertView, parent, getLayoutResId(item), position);
+            get(mContext, convertView, parent, getLayoutResId(item, position), position);
         onUpdate(helper, item, position);
         helper.setAssociatedObject(item);
         return helper.getView();

@@ -15,12 +15,16 @@
  */
 package com.classic.adapter;
 
+import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.text.util.Linkify;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
@@ -29,7 +33,8 @@ import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.widget.Adapter;
 import android.widget.AdapterView;
-import android.widget.Checkable;
+import android.widget.CheckedTextView;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RatingBar;
@@ -113,7 +118,7 @@ public class BaseAdapterHelper {
      */
     public BaseAdapterHelper setText(int viewId, String value) {
         TextView view = retrieveView(viewId);
-        view.setText(value);
+        view.setText(replaceEmpty(value));
         return this;
     }
 
@@ -178,14 +183,31 @@ public class BaseAdapterHelper {
     }
 
     /**
+     * Will set text color of a TextView.
+     * @param viewId       The view id.
+     * @param textColorRes The text color resource id.
+     * @param theme theme The theme used to style the color attributes, may be
+     *              {@code null}.
+     * @return The BaseAdapterHelper for chaining.
+     */
+    @TargetApi(Build.VERSION_CODES.M)
+    public BaseAdapterHelper setTextColorRes(int viewId, int textColorRes,@Nullable Resources.Theme theme) {
+        TextView view = retrieveView(viewId);
+        view.setTextColor(mContext.getResources().getColor(textColorRes, theme));
+        return this;
+    }
+
+    /**
      * Will set the image of an ImageView from a drawable.
      * @param viewId   The view id.
      * @param drawable The image drawable.
      * @return The BaseAdapterHelper for chaining.
      */
     public BaseAdapterHelper setImageDrawable(int viewId, Drawable drawable) {
-        ImageView view = retrieveView(viewId);
-        view.setImageDrawable(drawable);
+        if(null != drawable){
+            ImageView view = retrieveView(viewId);
+            view.setImageDrawable(drawable);
+        }
         return this;
     }
 
@@ -211,8 +233,10 @@ public class BaseAdapterHelper {
 
     /** Add an action to set the image of an image view. Can be called multiple times. */
     public BaseAdapterHelper setImageBitmap(int viewId, Bitmap bitmap) {
-        ImageView view = retrieveView(viewId);
-        view.setImageBitmap(bitmap);
+        if(null != bitmap){
+            ImageView view = retrieveView(viewId);
+            view.setImageBitmap(bitmap);
+        }
         return this;
     }
 
@@ -253,6 +277,19 @@ public class BaseAdapterHelper {
     public BaseAdapterHelper linkify(int viewId) {
         TextView view = retrieveView(viewId);
         Linkify.addLinks(view, Linkify.ALL);
+        return this;
+    }
+
+    /**
+     * Add links into a TextView.
+     * @param viewId The id of the TextView to linkify.
+     * @param mask
+     * @see android.text.util.Linkify#addLinks(TextView text, int mask)
+     * @return The BaseAdapterHelper for chaining.
+     */
+    public BaseAdapterHelper addLinks(int viewId, int mask) {
+        TextView view = retrieveView(viewId);
+        Linkify.addLinks(view, mask);
         return this;
     }
 
@@ -414,8 +451,10 @@ public class BaseAdapterHelper {
      * @return The BaseAdapterHelper for chaining.
      */
     public BaseAdapterHelper setTag(int viewId, Object tag) {
-        View view = retrieveView(viewId);
-        view.setTag(tag);
+        if(null != tag){
+            View view = retrieveView(viewId);
+            view.setTag(tag);
+        }
         return this;
     }
 
@@ -427,8 +466,10 @@ public class BaseAdapterHelper {
      * @return The BaseAdapterHelper for chaining.
      */
     public BaseAdapterHelper setTag(int viewId, int key, Object tag) {
-        View view = retrieveView(viewId);
-        view.setTag(key, tag);
+        if(null != tag){
+            View view = retrieveView(viewId);
+            view.setTag(key, tag);
+        }
         return this;
     }
 
@@ -439,8 +480,13 @@ public class BaseAdapterHelper {
      * @return The BaseAdapterHelper for chaining.
      */
     public BaseAdapterHelper setChecked(int viewId, boolean checked) {
-        Checkable view = (Checkable) retrieveView(viewId);
-        view.setChecked(checked);
+        View view = retrieveView(viewId);
+        if (view instanceof CompoundButton) {
+            ((CompoundButton) view).setChecked(checked);
+        } else if (view instanceof CheckedTextView) {
+            ((CheckedTextView) view).setChecked(checked);
+        }
+
         return this;
     }
 
@@ -451,8 +497,10 @@ public class BaseAdapterHelper {
      * @return The BaseAdapterHelper for chaining.
      */
     public BaseAdapterHelper setAdapter(int viewId, Adapter adapter) {
-        AdapterView view = retrieveView(viewId);
-        view.setAdapter(adapter);
+        if(null != adapter){
+            AdapterView view = retrieveView(viewId);
+            view.setAdapter(adapter);
+        }
         return this;
     }
 
@@ -490,5 +538,9 @@ public class BaseAdapterHelper {
     /** Should be called during convert */
     public void setAssociatedObject(Object associatedObject) {
         this.mAssociatedObject = associatedObject;
+    }
+
+    private String replaceEmpty(String params){
+        return TextUtils.isEmpty(params) ? "" : params;
     }
 }
