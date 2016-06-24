@@ -39,7 +39,7 @@ public class ListViewActivity extends AppCompatActivity {
             super(context, layoutResId, data);
         }
 
-        @Override public int getLayoutResId(News item) {
+        @Override public int getLayoutResId(News item, int position) {
             int layoutResId = -1;
             switch (item.getNewsType()){
                 case News.TYPE_NONE_PICTURE:
