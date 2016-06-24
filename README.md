@@ -14,7 +14,7 @@
 ##gradle依赖
 ```gradle
 dependencies {
-    compile 'com.classic.adapter:commonadapter:1.1'
+    compile 'com.classic.adapter:commonadapter:1.2'
     //项目中使用到RecyclerView,需要添加依赖
     compile 'com.android.support:recyclerview-v7:23.4.0'
 }
@@ -46,7 +46,7 @@ private final class MultipleLayoutAdapter extends CommonAdapter<News>{
         super(context, layoutResId, data);
     }
     //多种布局重写此方法即可
-    @Override public int getLayoutResId(News item) {
+    @Override public int getLayoutResId(News item, int position) {
         int layoutResId = -1;
         switch (item.getNewsType()){
             case News.TYPE_NONE_PICTURE: //布局样式一
@@ -116,7 +116,7 @@ private final class MultipleLayoutAdapter extends CommonRecyclerAdapter<News>{
         super(context, layoutResId, data);
     }
     //多种布局重写此方法即可
-    @Override public int getLayoutResId(News item) {
+    @Override public int getLayoutResId(News item, int position) {
         int layoutResId = -1;
         switch (item.getNewsType()){
             case News.TYPE_NONE_PICTURE: //布局样式一
@@ -197,6 +197,9 @@ helper.setText(R.id.viewId, text)
       .setRating(R.id.viewId, rating, max)
       .setTextColor(R.id.viewId, R.color.colorResId)
       .setTextColorRes(R.id.viewId, R.color.colorResId)
+      .setTextColorRes(R.id.viewId, R.color.colorResId, theme) //New in version 1.2
+      //TextView添加超链接，更多属性参考：android.text.util.Linkify#addLinks(TextView text, int mask)
+      .addLinks(R.id.viewId, , Linkify.ALL) //New in version 1.2
       //单个TextView设置Typeface
       .setTypeface(R.id.viewId, typeface)
       //多个TextView设置Typeface
@@ -240,7 +243,7 @@ public class YourXXX implements ImageLoad {
 
         fresco
         Android-Universal-Image-Loader
-        其它自定义
+        自定义
         ...
     }
 }
