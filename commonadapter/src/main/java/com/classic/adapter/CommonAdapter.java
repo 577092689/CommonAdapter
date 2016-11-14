@@ -19,15 +19,13 @@ import static com.classic.adapter.BaseAdapterHelper.get;
  * 创建时间: 2016/1/27 17:50.
  */
 public abstract class CommonAdapter<T> extends BaseAdapter implements IData<T>, IAdapter<T> {
-    protected final Context mContext;
-    protected final int     mLayoutResId;
-    protected final List<T> mData;
-
+    private final Context mContext;
+    private final int     mLayoutResId;
+    private final List<T> mData;
 
     public CommonAdapter(Context context, int layoutResId) {
         this(context, layoutResId, null);
     }
-
 
     public CommonAdapter(Context context, int layoutResId, List<T> data) {
         this.mData = data == null ? new ArrayList<T>() : new ArrayList<>(data);
@@ -35,21 +33,21 @@ public abstract class CommonAdapter<T> extends BaseAdapter implements IData<T>, 
         this.mLayoutResId = layoutResId;
     }
 
+    @Override public List<T> getData() {
+        return mData;
+    }
 
     @Override public int getCount() {
         return mData.size();
     }
 
-
     @Override public T getItem(int position) {
         return position >= mData.size() ? null : mData.get(position);
     }
 
-
     @Override public long getItemId(int position) {
         return position;
     }
-
 
     @Override public int getLayoutResId(T item, int position) {
         return this.mLayoutResId;

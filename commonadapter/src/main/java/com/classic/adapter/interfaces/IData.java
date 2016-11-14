@@ -9,7 +9,9 @@ import java.util.List;
  * 创 建 人: 续写经典
  * 创建时间: 2016/1/21 17:54.
  */
-public interface IData<T> {
+@SuppressWarnings("unused") public interface IData<T> {
+
+    List<T> getData();
 
     void add(T elem);
 
