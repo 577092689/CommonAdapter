@@ -23,8 +23,8 @@ import static com.classic.adapter.BaseAdapterHelper.get;
  * 创 建 人: 续写经典
  * 创建时间: 2016/1/27 17:50.
  */
-@SuppressWarnings({"WeakerAccess", "unused"})
-public abstract class CommonRecyclerAdapter<T> extends RecyclerView.Adapter implements IAdapter<T>, IData<T> {
+@SuppressWarnings({ "WeakerAccess", "unused" }) public abstract class CommonRecyclerAdapter<T>
+        extends RecyclerView.Adapter implements IAdapter<T>, IData<T> {
 
     private final Context mContext;
     private final int     mLayoutResId;
@@ -48,7 +48,8 @@ public abstract class CommonRecyclerAdapter<T> extends RecyclerView.Adapter impl
         return new RecyclerViewHolder(helper.getView(), helper);
     }
 
-    @SuppressWarnings("unchecked") @Override public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    @SuppressWarnings("unchecked") @Override
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         BaseAdapterHelper helper = ((RecyclerViewHolder) holder).mAdapterHelper;
         helper.setAssociatedObject(getItem(position));
         onUpdate(helper, getItem(position), position);
@@ -104,6 +105,11 @@ public abstract class CommonRecyclerAdapter<T> extends RecyclerView.Adapter impl
         notifyItemRemoved(index);
     }
 
+    /**
+     * @see {@link #replaceAll(List, DiffUtil.Callback)}
+     * @param elem
+     */
+    @Deprecated
     @Override public void replaceAll(List<T> elem) {
         mData.clear();
         mData.addAll(elem);
@@ -155,16 +161,14 @@ public abstract class CommonRecyclerAdapter<T> extends RecyclerView.Adapter impl
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override public void onClick(View v) {
                     if (null != mItemClickListener) {
-                        mItemClickListener.onItemClick(RecyclerViewHolder.this, v,
-                                                       getAdapterPosition());
+                        mItemClickListener.onItemClick(RecyclerViewHolder.this, v, getAdapterPosition());
                     }
                 }
             });
             itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override public boolean onLongClick(View v) {
                     if (null != mItemLongClickListener) {
-                        mItemLongClickListener.onItemLongClick(RecyclerViewHolder.this, v,
-                                                               getAdapterPosition());
+                        mItemLongClickListener.onItemLongClick(RecyclerViewHolder.this, v, getAdapterPosition());
                         return true;
                     }
                     return false;
@@ -173,8 +177,7 @@ public abstract class CommonRecyclerAdapter<T> extends RecyclerView.Adapter impl
         }
     }
 
-    public static abstract class AbsScrollControl extends RecyclerView.OnScrollListener
-            implements IScrollHideListener{
+    public static abstract class AbsScrollControl extends RecyclerView.OnScrollListener implements IScrollHideListener {
         private static final int DEFAULT_SCROLL_HIDE_OFFSET = 20; //滑动隐藏的偏移量
 
         private int     mCurrentScrollOffset;
@@ -182,14 +185,13 @@ public abstract class CommonRecyclerAdapter<T> extends RecyclerView.Adapter impl
 
         /**
          * 自定义LayoutManager需要实现此方法
-         * @return
          */
-        protected int getFirstVisibleItemPositions(){
+        protected int getFirstVisibleItemPositions() {
             return 0;
         }
 
         /** 获取滑动隐藏的偏移量 */
-        protected int getScrollHideOffset(){
+        protected int getScrollHideOffset() {
             return DEFAULT_SCROLL_HIDE_OFFSET;
         }
 
@@ -198,16 +200,17 @@ public abstract class CommonRecyclerAdapter<T> extends RecyclerView.Adapter impl
 
             final int firstVisibleItemPosition = findFirstVisibleItemPosition(recyclerView.getLayoutManager());
 
-            if(firstVisibleItemPosition == 0 && !isControlVisible){
+            if (firstVisibleItemPosition == 0 && !isControlVisible) {
                 onShow();
                 isControlVisible = true;
-            } else if (firstVisibleItemPosition != 0 && mCurrentScrollOffset>getScrollHideOffset() && isControlVisible){
+            } else if (firstVisibleItemPosition != 0 && mCurrentScrollOffset > getScrollHideOffset() &&
+                       isControlVisible) {
                 //向上滚动,并且视图为显示状态
                 onHide();
                 isControlVisible = false;
                 mCurrentScrollOffset = 0;
-            } else if (firstVisibleItemPosition != 0 && mCurrentScrollOffset<-getScrollHideOffset() &&
-                       !isControlVisible){
+            } else if (firstVisibleItemPosition != 0 && mCurrentScrollOffset < -getScrollHideOffset() &&
+                       !isControlVisible) {
                 //向下滚动,并且视图为隐藏状态
                 onShow();
                 isControlVisible = true;
@@ -216,18 +219,18 @@ public abstract class CommonRecyclerAdapter<T> extends RecyclerView.Adapter impl
 
             //dy>0:向上滚动
             //dy<0:向下滚动
-            if((isControlVisible && dy>0) || (!isControlVisible && dy<0)){
+            if ((isControlVisible && dy > 0) || (!isControlVisible && dy < 0)) {
                 mCurrentScrollOffset += dy;
             }
         }
 
-        private int findFirstVisibleItemPosition(RecyclerView.LayoutManager layoutManager){
+        private int findFirstVisibleItemPosition(RecyclerView.LayoutManager layoutManager) {
             if (layoutManager instanceof GridLayoutManager) {
-                return ((GridLayoutManager)layoutManager).findFirstVisibleItemPosition();
+                return ((GridLayoutManager) layoutManager).findFirstVisibleItemPosition();
             } else if (layoutManager instanceof LinearLayoutManager) {
-                return ((LinearLayoutManager)layoutManager).findFirstVisibleItemPosition();
+                return ((LinearLayoutManager) layoutManager).findFirstVisibleItemPosition();
             } else if (layoutManager instanceof StaggeredGridLayoutManager) {
-                return ((StaggeredGridLayoutManager)layoutManager).findFirstVisibleItemPositions(null)[0];
+                return ((StaggeredGridLayoutManager) layoutManager).findFirstVisibleItemPositions(null)[0];
             } else {
                 return getFirstVisibleItemPositions();
             }

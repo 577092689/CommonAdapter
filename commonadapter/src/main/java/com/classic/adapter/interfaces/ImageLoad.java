@@ -1,6 +1,7 @@
 package com.classic.adapter.interfaces;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.widget.ImageView;
 
 /**
@@ -12,5 +13,5 @@ import android.widget.ImageView;
  */
 public interface ImageLoad {
 
-    void load(Context context, ImageView imageView, String imageUrl);
+    void load(@NonNull Context context, @NonNull ImageView imageView, @NonNull String imageUrl);
 }

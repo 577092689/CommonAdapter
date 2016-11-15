@@ -1,0 +1,42 @@
+apply plugin: 'com.github.dcendents.android-maven'
+
+install {
+    repositories.mavenInstaller {
+        pom.project {
+            name projectName
+            description projectDesc
+            url githubUrl
+            inceptionYear '2016'
+
+            packaging 'aar'
+            groupId mavenGroup
+            artifactId mavenArtifactId
+            version mavenVersion
+
+            licenses {
+                license {
+                    name licensesName
+                    url licensesUrl
+                }
+            }
+            scm {
+                connection "${githubUrl}.git"
+                url githubUrl
+            }
+            developers {
+                developer {
+                    name developerName
+                }
+            }
+        }
+    }
+}
+
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
+
+artifacts {
+    archives sourcesJar
+}

@@ -1,4 +1,4 @@
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
+apply from: 'config.gradle'
 
 buildscript {
     repositories {
@@ -6,11 +6,8 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:2.2.2'
+//        classpath 'com.github.dcendents:android-maven-gradle-plugin:1.5'
 //        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.1'
-//        classpath 'com.github.dcendents:android-maven-gradle-plugin:1.4.1'
-
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
     }
 }
 
@@ -22,4 +19,22 @@ allprojects {
 
 task clean(type: Delete) {
     delete rootProject.buildDir
+}
+
+ext {
+    developerName = 'classic'
+
+    userOrg  = 'xxjd'
+    repoName = 'maven'
+    projectName = 'CommonAdapter'
+    projectDesc = 'android common adapter'
+
+    githubUrl = 'https://github.com/qyxxjd/CommonAdapter'
+
+    mavenGroup = 'com.classic.adapter'
+    mavenArtifactId = 'commonadapter'
+    mavenVersion = '1.3'
+
+    licensesName = 'MIT'
+    licensesUrl = 'http://opensource.org/licenses/MIT'
 }
