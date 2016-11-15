@@ -35,7 +35,7 @@ public class ListViewActivity extends AppCompatActivity {
 
     private final class MultipleLayoutAdapter extends CommonAdapter<News> {
 
-        public MultipleLayoutAdapter(Context context, int layoutResId, List<News> data) {
+        MultipleLayoutAdapter(Context context, int layoutResId, List<News> data) {
             super(context, layoutResId, data);
         }
 

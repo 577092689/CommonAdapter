@@ -55,7 +55,7 @@ public class RecyclerViewActivity extends AppCompatActivity implements
 
     private class NewsAdapter extends CommonRecyclerAdapter<News>{
 
-        public NewsAdapter(Context context, int layoutResId, List<News> data) {
+        NewsAdapter(Context context, int layoutResId, List<News> data) {
             super(context, layoutResId, data);
         }
 
