@@ -9,13 +9,16 @@ import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
+
 import com.classic.adapter.BaseAdapterHelper;
 import com.classic.adapter.CommonRecyclerAdapter;
+import com.classic.adapter.interfaces.ImageLoad;
 import com.classic.adapter.simple.R;
 import com.classic.adapter.simple.bean.News;
 import com.classic.adapter.simple.consts.Consts;
 import com.classic.adapter.simple.data.NewsDataSource;
-import com.classic.adapter.simple.imageload.GlideImageLoad;
+import com.classic.adapter.simple.imageload.PicassoImageLoad;
+
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -24,7 +27,7 @@ public class RecyclerViewActivity extends AppCompatActivity implements
     CommonRecyclerAdapter.OnItemClickListener, CommonRecyclerAdapter.OnItemLongClickListener{
     private RecyclerView mRecyclerView;
     private NewsAdapter  mNewsAdapter;
-
+    private ImageLoad    mImageLoad;
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,6 +36,7 @@ public class RecyclerViewActivity extends AppCompatActivity implements
         getSupportActionBar().setTitle(R.string.main_recyclerview_lable);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        mImageLoad = new PicassoImageLoad();
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerview);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -90,13 +94,13 @@ public class RecyclerViewActivity extends AppCompatActivity implements
                             String.format(Locale.CHINA, Consts.FORMAT_AUTHOR, item.getAuthor()))
                         .setText(R.id.item_single_picture_date,
                             Consts.DATE_FORMAT.format(new Date(item.getReleaseTime())))
-                        .setImageLoad(new GlideImageLoad())
+                        .setImageLoad(mImageLoad)
                         .setImageUrl(R.id.item_single_picture_cover,item.getCoverUrl());
                     break;
                 case com.classic.adapter.simple.bean.News.TYPE_MULTIPLE_PICTURE:
                     String[] urls = item.getCoverUrl().split(Consts.URL_SEPARATOR);
                     helper.setText(R.id.item_multiple_picture_intro, item.getIntro())
-                        .setImageLoad(new GlideImageLoad())
+                        .setImageLoad(mImageLoad)
                         .setImageUrl(R.id.item_multiple_picture_cover_left,urls[0])
                         .setImageUrl(R.id.item_multiple_picture_cover_right, urls[1]);
                     break;

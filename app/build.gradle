@@ -23,5 +23,8 @@ dependencies {
     compile rootProject.ext.supportAppcompatV7
     compile rootProject.ext.supportRecyclerView
     compile rootProject.ext.glide
+    compile rootProject.ext.picasso
+//    compile rootProject.ext.commonAdapter
+
     compile project(':commonadapter')
 }

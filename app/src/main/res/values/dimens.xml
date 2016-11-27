@@ -10,6 +10,6 @@
     <dimen name="size_item_title">18sp</dimen>
     <dimen name="size_item_subtitle">12sp</dimen>
     <dimen name="size_item_intro">14sp</dimen>
-    <dimen name="size_item_cover_height">100dp</dimen>
+    <dimen name="size_item_cover_height">120dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
 </resources>
