@@ -74,6 +74,10 @@ import com.classic.adapter.interfaces.ImageLoad;
         this.mViews = new SparseArray<>();
         mConvertView = LayoutInflater.from(context).inflate(layoutId, parent, false);
         mConvertView.setTag(this);
+        if(null != com.classic.adapter.Adapter.singleton &&
+                null != com.classic.adapter.Adapter.singleton.getImageLoad()){
+            mImageLoad = com.classic.adapter.Adapter.singleton.getImageLoad();
+        }
     }
 
 
