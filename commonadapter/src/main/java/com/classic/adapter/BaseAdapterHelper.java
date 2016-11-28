@@ -242,7 +242,7 @@ import com.classic.adapter.interfaces.ImageLoad;
     }
 
     /**
-     * Will download an image from a URL and put it in an ImageView.<br/>
+     * Will download an image from a URL and put it in an ImageView.
      * @param viewId   The view id.
      * @param imageUrl The image URL.
      * @return The BaseAdapterHelper for chaining.

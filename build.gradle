@@ -21,19 +21,23 @@ task clean(type: Delete) {
     delete rootProject.buildDir
 }
 
-ext {
-    developerName = 'classic'
 
-    userOrg  = 'xxjd'
-    repoName = 'maven'
+ext {
+    //bintray configs
+
     projectName = 'CommonAdapter'
     projectDesc = 'android common adapter'
+    projectGroup = 'com.classic.adapter'
+    projectArtifactId = 'commonadapter'
+    projectVersion = '1.4'
 
+    orgName = 'xxjd'
+    repoName = 'maven'
+
+    developerId = 'qyxxjd'
+    developerName = 'classic'
+    developerEmail = 'pgliubin@gmail.com'
     githubUrl = 'https://github.com/qyxxjd/CommonAdapter'
-
-    mavenGroup = 'com.classic.adapter'
-    mavenArtifactId = 'commonadapter'
-    mavenVersion = '1.3'
 
     licensesName = 'MIT'
     licensesUrl = 'http://opensource.org/licenses/MIT'
