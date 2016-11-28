@@ -1,4 +1,5 @@
 [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-CommonAdapter-brightgreen.svg?style=flat)](http://android-arsenal.com/details/1/3727)
+[ ![Download](https://api.bintray.com/packages/xxjd/maven/CommonAdapter/images/download.svg) ](https://bintray.com/xxjd/maven/CommonAdapter/_latestVersion)
 
 - 简化大量重复代码
 - 支持多布局
@@ -14,9 +15,9 @@
 ##gradle依赖
 ```gradle
 dependencies {
-    compile 'com.classic.adapter:commonadapter:1.2'
+    compile 'com.classic.adapter:commonadapter:1.4'
     //项目中使用到RecyclerView,需要添加依赖
-    compile 'com.android.support:recyclerview-v7:23.4.0'
+    compile 'com.android.support:recyclerview-v7:25.0.1'
 }
 ```
 
@@ -33,7 +34,8 @@ listView.setAdapter(new CommonAdapter<News>(context,
         //BaseAdapterHelper详细用法，见下方
 
         helper.setText(R.id.xxx, item.getTitle())
-               //可实现ImageLoad接口，进行图片自定义加载方式，demo里面使用的Glide
+               //1.如果已配置全局图片加载，这里可以不设置。全局图片加载配置见下方
+               //2.有些项目可能使用多个图片加载库，这里可以针对当前adapter设置图片加载的实现方式，详见demo
               .setImageLoad(new GlideImageLoad())
               .setImageUrl(R.id.xxx,item.getCoverUrl());
     }
@@ -65,7 +67,6 @@ private final class MultipleLayoutAdapter extends CommonAdapter<News>{
     }
 
     @Override public void onUpdate(BaseAdapterHelper helper, News item, int position) {
-        helper.setImageLoad(new GlideImageLoad());
         switch (item.getNewsType()){
             case News.TYPE_NONE_PICTURE: //布局样式一
                 helper.setText(R.id.xxx, item.getTitle())
@@ -104,7 +105,6 @@ private class NewsAdapter extends CommonRecyclerAdapter<News>{
 
     @Override public void onUpdate(BaseAdapterHelper helper, News item, int position) {
         helper.setText(R.id.xxx, item.getTitle())
-              .setImageLoad(new GlideImageLoad())
               .setImageUrl(R.id.xxx,item.getCoverUrl());
     }
 }
@@ -135,7 +135,6 @@ private final class MultipleLayoutAdapter extends CommonRecyclerAdapter<News>{
     }
 
     @Override public void onUpdate(BaseAdapterHelper helper, News item, int position) {
-        helper.setImageLoad(new GlideImageLoad());
         switch (item.getNewsType()){
             case News.TYPE_NONE_PICTURE: //布局样式一
                 helper.setText(R.id.xxx, item.getTitle())
@@ -225,6 +224,21 @@ View childView = helper.getView(R.id.viewId);
 
 ```
 
+配置全局图片加载的实现类 (v1.4新增)
+```java
+public class YourApplication extends Application {
+
+    @Override public void onCreate() {
+        super.onCreate();
+
+        ...
+
+        ImageLoad imageLoadImpl = new GlideImageLoad();
+        Adapter.config(new Adapter.Builder().setImageLoad(imageLoadImpl));
+    }
+}
+```
+
 自定义图片加载
 ```java
 public class YourXXX implements ImageLoad {
@@ -247,13 +261,6 @@ public class YourXXX implements ImageLoad {
         ...
     }
 }
-```
-
-注意事项
-```java
-//加载网络图片之前，请调用setImageLoad方法，设置网络图片加载的实现类
-helper.setImageLoad(new GlideImageLoad());
-helper.setImageUrl(R.id.xxx,url);
 ```
 
 常用的数据操作
