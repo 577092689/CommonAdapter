@@ -2,8 +2,6 @@ package com.classic.adapter.simple.activity;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.view.MenuItem;
 import android.widget.ListView;
 
 import com.classic.adapter.BaseAdapterHelper;
@@ -17,22 +15,46 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-public class ListViewActivity extends AppCompatActivity {
-    private ListView mListView;
+public class ListViewActivity extends DemoActivity {
+    private ListView              mListView;
+    private MultipleLayoutAdapter mAdapter;
 
+    @Override protected boolean canBack() {
+        return true;
+    }
+
+    @Override protected int getLayoutResId() {
+        return R.layout.activity_listview;
+    }
+
+    @Override protected void testAdd() {
+        mAdapter.add(NewsDataSource.randomData());
+    }
+
+    @Override protected void testAddAll() {
+        mAdapter.addAll(NewsDataSource.getAddList(5));
+    }
+
+    @Override protected void testSetByIndex() {
+        mAdapter.set(0, NewsDataSource.randomData());
+    }
+
+    @Override protected void testRemoveByIndex() {
+        mAdapter.remove(0);
+    }
+
+    @Override protected void testReplaceAll() {
+        mAdapter.replaceAll(NewsDataSource.getReplaceList());
+    }
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_listview);
-        //这里偷懒，使用默认的。实际项目中建议使用ToolBar
-        getSupportActionBar().setTitle(R.string.main_listview_lable);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
+        mToolbar.setTitle(R.string.main_listview_lable);
         mListView = (ListView) findViewById(R.id.listview);
-        mListView.setAdapter(new MultipleLayoutAdapter(this, R.layout.item_none_picture,
-                NewsDataSource.getNewsList()));
+        mAdapter = new MultipleLayoutAdapter(this, R.layout.item_none_picture,
+                NewsDataSource.getNewsList());
+        mListView.setAdapter(mAdapter);
     }
-
 
     private final class MultipleLayoutAdapter extends CommonAdapter<News> {
 
@@ -42,7 +64,7 @@ public class ListViewActivity extends AppCompatActivity {
 
         @Override public int getLayoutResId(News item, int position) {
             int layoutResId = -1;
-            switch (item.getNewsType()){
+            switch (item.getNewsType()) {
                 case News.TYPE_NONE_PICTURE:
                     layoutResId = R.layout.item_none_picture;
                     break;
@@ -57,40 +79,32 @@ public class ListViewActivity extends AppCompatActivity {
         }
 
         @Override public void onUpdate(BaseAdapterHelper helper, News item, int position) {
-            switch (item.getNewsType()){
+            switch (item.getNewsType()) {
                 case News.TYPE_NONE_PICTURE:
                     helper.setText(R.id.item_none_picture_title, item.getTitle())
-                        .setText(R.id.item_none_picture_author,
-                            String.format(Locale.CHINA, Consts.FORMAT_AUTHOR, item.getAuthor()))
-                        .setText(R.id.item_none_picture_date,
-                            Consts.DATE_FORMAT.format(new Date(item.getReleaseTime())))
-                        .setText(R.id.item_none_picture_intro, item.getIntro());
+                          .setText(R.id.item_none_picture_author,
+                                  String.format(Locale.CHINA, Consts.FORMAT_AUTHOR,
+                                          item.getAuthor()))
+                          .setText(R.id.item_none_picture_date,
+                                  Consts.DATE_FORMAT.format(new Date(item.getReleaseTime())))
+                          .setText(R.id.item_none_picture_intro, item.getIntro());
                     break;
                 case News.TYPE_SINGLE_PICTURE:
                     helper.setText(R.id.item_single_picture_title, item.getTitle())
-                        .setText(R.id.item_single_picture_author,
-                            String.format(Locale.CHINA, Consts.FORMAT_AUTHOR, item.getAuthor()))
-                        .setText(R.id.item_single_picture_date,
-                            Consts.DATE_FORMAT.format(new Date(item.getReleaseTime())))
-                        //.setImageLoad(new GlideImageLoad())
-                        .setImageUrl(R.id.item_single_picture_cover,item.getCoverUrl());
+                          .setText(R.id.item_single_picture_author,
+                                  String.format(Locale.CHINA, Consts.FORMAT_AUTHOR,
+                                          item.getAuthor()))
+                          .setText(R.id.item_single_picture_date,
+                                  Consts.DATE_FORMAT.format(new Date(item.getReleaseTime())))
+                          .setImageUrl(R.id.item_single_picture_cover, item.getCoverUrl());
                     break;
                 case News.TYPE_MULTIPLE_PICTURE:
                     String[] urls = item.getCoverUrl().split(Consts.URL_SEPARATOR);
                     helper.setText(R.id.item_multiple_picture_intro, item.getIntro())
-                        //.setImageLoad(new GlideImageLoad())
-                        .setImageUrl(R.id.item_multiple_picture_cover_left,urls[0])
-                        .setImageUrl(R.id.item_multiple_picture_cover_right, urls[1]);
+                          .setImageUrl(R.id.item_multiple_picture_cover_left, urls[0])
+                          .setImageUrl(R.id.item_multiple_picture_cover_right, urls[1]);
                     break;
             }
         }
-    }
-
-    @Override public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            finish();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 }

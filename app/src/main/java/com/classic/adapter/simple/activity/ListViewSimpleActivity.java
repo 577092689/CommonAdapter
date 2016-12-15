@@ -1,9 +1,6 @@
 package com.classic.adapter.simple.activity;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.ListView;
 
 import com.classic.adapter.BaseAdapterHelper;
@@ -16,41 +13,53 @@ import com.classic.adapter.simple.data.NewsDataSource;
 import java.util.Date;
 import java.util.Locale;
 
-public class ListViewSimpleActivity extends AppCompatActivity {
+public class ListViewSimpleActivity extends DemoActivity {
     private ListView mListView;
 
+    @Override protected boolean canBack() {
+        return true;
+    }
+
+    @Override protected int getLayoutResId() {
+        return R.layout.activity_listview;
+    }
+
+    @Override protected void testAdd() {
+        mAdapter.add(NewsDataSource.randomData());
+    }
+
+    @Override protected void testAddAll() {
+        mAdapter.addAll(NewsDataSource.getAddList(5));
+    }
+
+    @Override protected void testSetByIndex() {
+        mAdapter.set(0, NewsDataSource.randomData());
+    }
+
+    @Override protected void testRemoveByIndex() {
+        mAdapter.remove(0);
+    }
+
+    @Override protected void testReplaceAll() {
+        mAdapter.replaceAll(NewsDataSource.getReplaceList());
+    }
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_listview);
-        //这里偷懒，使用默认的。实际项目中建议使用ToolBar
-        getSupportActionBar().setTitle(R.string.main_listview_simple_lable);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
+        mToolbar.setTitle(R.string.main_listview_simple_lable);
         mListView = (ListView) findViewById(R.id.listview);
-        mListView.setAdapter(new CommonAdapter<News>(this, R.layout.item_none_picture,
-                NewsDataSource.getNewsList()) {
-            @Override public void onUpdate(BaseAdapterHelper helper, News item, int position) {
-                helper.setText(R.id.item_none_picture_title, item.getTitle())
-                      .setText(R.id.item_none_picture_author,
-                              String.format(Locale.CHINA, Consts.FORMAT_AUTHOR, item.getAuthor()))
-                      .setText(R.id.item_none_picture_date,
-                              Consts.DATE_FORMAT.format(new Date(item.getReleaseTime())))
-                      .setText(R.id.item_none_picture_intro, item.getIntro());
-            }
-        });
-
+        mListView.setAdapter(mAdapter);
     }
 
-    @Override public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            finish();
-            return true;
+    private CommonAdapter<News> mAdapter = new CommonAdapter<News>(this, R.layout.item_none_picture,
+            NewsDataSource.getNewsList()) {
+        @Override public void onUpdate(BaseAdapterHelper helper, News item, int position) {
+            helper.setText(R.id.item_none_picture_title, item.getTitle())
+                  .setText(R.id.item_none_picture_author,
+                          String.format(Locale.CHINA, Consts.FORMAT_AUTHOR, item.getAuthor()))
+                  .setText(R.id.item_none_picture_date,
+                          Consts.DATE_FORMAT.format(new Date(item.getReleaseTime())))
+                  .setText(R.id.item_none_picture_intro, item.getIntro());
         }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override public boolean onCreateOptionsMenu(Menu menu) {
-        return super.onCreateOptionsMenu(menu);
-    }
+    };
 }

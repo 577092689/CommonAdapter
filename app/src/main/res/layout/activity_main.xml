@@ -5,8 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="@dimen/activity_horizontal_margin"
-    tools:context="com.classic.simple.MainActivity">
+    android:padding="@dimen/activity_horizontal_margin" >
 
     <TextView
         style="@style/MainContent"

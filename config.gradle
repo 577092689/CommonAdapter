@@ -1,10 +1,10 @@
-def supportVersion = "25.0.1"
+def supportVersion = "25.1.0"
 
 ext {
 
     android = [
             compileSdkVersion: 25,
-            buildToolsVersion: "25.0.1",
+            buildToolsVersion: "25.0.2",
             applicationId    : "com.classic.adapter.simple",
             minSdkVersion    : 9,
             targetSdkVersion : 25,

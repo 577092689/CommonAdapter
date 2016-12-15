@@ -24,7 +24,7 @@ dependencies {
     compile rootProject.ext.supportRecyclerView
     compile rootProject.ext.glide
     compile rootProject.ext.picasso
-//    compile rootProject.ext.commonAdapter
+    compile rootProject.ext.commonAdapter
 
-    compile project(':commonadapter')
+//    compile project(':commonadapter')
 }

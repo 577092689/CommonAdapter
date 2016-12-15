@@ -9,6 +9,7 @@ public class News {
     /** 无图布局样式 */
     public static final int TYPE_NONE_PICTURE     = 2;
 
+    private long   id;
     private String title;
     private String intro;
     private String coverUrl;
@@ -18,17 +19,26 @@ public class News {
 
     public News(){}
 
-    public News(int newsType, String author, String title, String intro) {
-        this(newsType,author,title,intro,"");
+    public News(long id, int newsType, String author, String title, String intro) {
+        this(id, newsType,author,title,intro,"");
     }
 
-    public News(int newsType, String author, String title, String intro, String coverUrl) {
+    public News(long id, int newsType, String author, String title, String intro, String coverUrl) {
+        this.id = id;
         this.newsType = newsType;
         this.author = author;
         this.title = title;
         this.intro = intro;
         this.coverUrl = coverUrl;
         this.releaseTime = System.currentTimeMillis();
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getTitle() {

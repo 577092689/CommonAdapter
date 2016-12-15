@@ -27,3 +27,5 @@ dependencies {
 
 //apply from: 'maven.gradle'
 //apply from: 'bintray.gradle'
+//apply from: 'findbugs.gradle'
+//apply from: 'checkstyle.gradle'

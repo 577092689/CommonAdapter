@@ -1,0 +1,30 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto" >
+
+    <item android:id="@+id/add"
+        android:title="Add"
+        android:orderInCategory="1"
+        app:showAsAction="never"
+    />
+
+    <item android:id="@+id/add_all"
+        android:title="Add All"
+        android:orderInCategory="1"
+        app:showAsAction="never"/>
+
+    <item android:id="@+id/set_index"
+        android:title="Set Index"
+        android:orderInCategory="1"
+        app:showAsAction="never"/>
+
+    <item android:id="@+id/remove_index"
+        android:title="Remove Index"
+        android:orderInCategory="1"
+        app:showAsAction="never"/>
+
+    <item android:id="@+id/replace_all"
+        android:title="Replace All"
+        android:orderInCategory="1"
+        app:showAsAction="never"/>
+
+</menu>

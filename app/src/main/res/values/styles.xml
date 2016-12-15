@@ -1,12 +1,10 @@
 <resources>
-
-    <!-- Base application theme. -->
     <style name="AppTheme"
-        parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
+            parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:textColorPrimary">@android:color/white</item>
         <item name="android:windowBackground">@color/windowBackground</item>
     </style>
 
@@ -62,12 +60,12 @@
     </style>
 
     <style name="Item.Intro.Long">
-        <item name="android:minLines">5</item>
+        <!--<item name="android:minLines">5</item>-->
         <item name="android:maxLines">5</item>
     </style>
 
     <style name="Item.Intro.Short">
-        <item name="android:minLines">3</item>
+        <!--<item name="android:minLines">3</item>-->
         <item name="android:maxLines">3</item>
     </style>
 
