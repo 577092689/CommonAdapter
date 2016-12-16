@@ -1,16 +1,18 @@
 package com.classic.adapter;
 
 import android.content.Context;
-import android.support.v7.util.DiffUtil;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
 import android.view.ViewGroup;
+
 import com.classic.adapter.interfaces.IAdapter;
 import com.classic.adapter.interfaces.IData;
 import com.classic.adapter.interfaces.IScrollHideListener;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,6 +21,7 @@ import static com.classic.adapter.BaseAdapterHelper.get;
 /**
  * 项目名称: CommonAdapter
  * 包 名 称: com.classic.adapter
+ *
  * 类 描 述: 通用Adapter,适用于RecyclerView,简化大量重复代码
  * 创 建 人: 续写经典
  * 创建时间: 2016/1/27 17:50.
@@ -55,6 +58,17 @@ import static com.classic.adapter.BaseAdapterHelper.get;
         onUpdate(helper, getItem(position), position);
     }
 
+    @SuppressWarnings("unchecked") @Override
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position, List payloads) {
+        if (null != payloads && payloads.size() > 0) {
+            BaseAdapterHelper helper = ((RecyclerViewHolder) holder).mAdapterHelper;
+            helper.setAssociatedObject(getItem(position));
+            onItemContentChanged(helper, payloads);
+        } else {
+            super.onBindViewHolder(holder, position, payloads);
+        }
+    }
+
     @Override public int getItemViewType(int position) {
         return getLayoutResId(getItem(position), position);
     }
@@ -75,28 +89,28 @@ import static com.classic.adapter.BaseAdapterHelper.get;
         return mData;
     }
 
-    @Override public void add(T elem) {
-        mData.add(elem);
+    @Override public void add(T item) {
+        mData.add(item);
         notifyItemInserted(mData.size());
     }
 
-    @Override public void addAll(List<T> elem) {
-        mData.addAll(elem);
-        notifyItemRangeInserted(mData.size() - elem.size(), elem.size());
+    @Override public void addAll(List<T> list) {
+        mData.addAll(list);
+        notifyItemRangeInserted(mData.size() - list.size(), list.size());
     }
 
-    @Override public void set(T oldElem, T newElem) {
-        set(mData.indexOf(oldElem), newElem);
+    @Override public void set(T oldItem, T newItem) {
+        set(mData.indexOf(oldItem), newItem);
     }
 
-    @Override public void set(int index, T elem) {
-        mData.set(index, elem);
+    @Override public void set(int index, T item) {
+        mData.set(index, item);
         notifyItemChanged(index);
     }
 
-    @Override public void remove(T elem) {
-        final int position = mData.indexOf(elem);
-        mData.remove(elem);
+    @Override public void remove(T item) {
+        final int position = mData.indexOf(item);
+        mData.remove(item);
         notifyItemRemoved(position);
     }
 
@@ -105,19 +119,12 @@ import static com.classic.adapter.BaseAdapterHelper.get;
         notifyItemRemoved(index);
     }
 
-    /**
-     * @see {@link #replaceAll(List, DiffUtil.Callback)}
-     * @param elem
-     */
-    @Deprecated
-    @Override public void replaceAll(List<T> elem) {
-        mData.clear();
-        mData.addAll(elem);
-        notifyDataSetChanged();
+    @Override public void replaceAll(List<T> item) {
+        replaceAll(item, true);
     }
 
-    @Override public boolean contains(T elem) {
-        return mData.contains(elem);
+    @Override public boolean contains(T item) {
+        return mData.contains(item);
     }
 
     @Override public void clear() {
@@ -125,10 +132,28 @@ import static com.classic.adapter.BaseAdapterHelper.get;
         notifyDataSetChanged();
     }
 
-    public void replaceAll(List<T> elem, DiffUtil.Callback callback) {
+    public void replaceAll(List<T> elem, boolean notifyDataSetChanged) {
         mData.clear();
         mData.addAll(elem);
-        DiffUtil.calculateDiff(callback, true).dispatchUpdatesTo(this);
+        if (notifyDataSetChanged) {
+            notifyDataSetChanged();
+        }
+    }
+
+    /**
+     * 更小粒度的更新，比如某个对象的某个属性值改变了，只改变此属性
+     * <pre>
+     * 此回调执行的前提是：
+     * 使用{@link android.support.v7.util.DiffUtil.Callback}进行数据更新，
+     * 并且重写了{@link android.support.v7.util.DiffUtil.Callback#getChangePayload}方法
+     * 使用方法见{https://github.com/qyxxjd/CommonAdapter/blob/master/app/src/main/java/com/classic/adapter/simple/activity/RecyclerViewSimpleActivity.java}
+     * </pre>
+     * @param helper
+     * @param payloads
+     */
+    public void onItemContentChanged(@NonNull BaseAdapterHelper helper,
+                                     @NonNull List<Object> payloads) {
+
     }
 
     public T getItem(int position) {
@@ -161,14 +186,16 @@ import static com.classic.adapter.BaseAdapterHelper.get;
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override public void onClick(View v) {
                     if (null != mItemClickListener) {
-                        mItemClickListener.onItemClick(RecyclerViewHolder.this, v, getAdapterPosition());
+                        mItemClickListener.onItemClick(RecyclerViewHolder.this, v,
+                                getAdapterPosition());
                     }
                 }
             });
             itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override public boolean onLongClick(View v) {
                     if (null != mItemLongClickListener) {
-                        mItemLongClickListener.onItemLongClick(RecyclerViewHolder.this, v, getAdapterPosition());
+                        mItemLongClickListener.onItemLongClick(RecyclerViewHolder.this, v,
+                                getAdapterPosition());
                         return true;
                     }
                     return false;
@@ -177,7 +204,8 @@ import static com.classic.adapter.BaseAdapterHelper.get;
         }
     }
 
-    public static abstract class AbsScrollControl extends RecyclerView.OnScrollListener implements IScrollHideListener {
+    public static abstract class AbsScrollControl extends RecyclerView.OnScrollListener
+            implements IScrollHideListener {
         private static final int DEFAULT_SCROLL_HIDE_OFFSET = 20; //滑动隐藏的偏移量
 
         private int     mCurrentScrollOffset;
@@ -198,18 +226,21 @@ import static com.classic.adapter.BaseAdapterHelper.get;
         @Override public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
             super.onScrolled(recyclerView, dx, dy);
 
-            final int firstVisibleItemPosition = findFirstVisibleItemPosition(recyclerView.getLayoutManager());
+            final int firstVisibleItemPosition = findFirstVisibleItemPosition(
+                    recyclerView.getLayoutManager());
 
             if (firstVisibleItemPosition == 0 && !isControlVisible) {
                 onShow();
                 isControlVisible = true;
-            } else if (firstVisibleItemPosition != 0 && mCurrentScrollOffset > getScrollHideOffset() &&
+            } else if (firstVisibleItemPosition != 0 &&
+                       mCurrentScrollOffset > getScrollHideOffset() &&
                        isControlVisible) {
                 //向上滚动,并且视图为显示状态
                 onHide();
                 isControlVisible = false;
                 mCurrentScrollOffset = 0;
-            } else if (firstVisibleItemPosition != 0 && mCurrentScrollOffset < -getScrollHideOffset() &&
+            } else if (firstVisibleItemPosition != 0 &&
+                       mCurrentScrollOffset < -getScrollHideOffset() &&
                        !isControlVisible) {
                 //向下滚动,并且视图为隐藏状态
                 onShow();
@@ -230,7 +261,8 @@ import static com.classic.adapter.BaseAdapterHelper.get;
             } else if (layoutManager instanceof LinearLayoutManager) {
                 return ((LinearLayoutManager) layoutManager).findFirstVisibleItemPosition();
             } else if (layoutManager instanceof StaggeredGridLayoutManager) {
-                return ((StaggeredGridLayoutManager) layoutManager).findFirstVisibleItemPositions(null)[0];
+                return ((StaggeredGridLayoutManager) layoutManager).findFirstVisibleItemPositions(
+                        null)[0];
             } else {
                 return getFirstVisibleItemPositions();
             }

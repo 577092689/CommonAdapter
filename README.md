@@ -15,7 +15,7 @@
 ##gradle依赖
 ```gradle
 dependencies {
-    compile 'com.classic.adapter:commonadapter:1.4'
+    compile 'com.classic.adapter:commonadapter:1.5'
     //项目中使用到RecyclerView,需要添加依赖
     compile 'com.android.support:recyclerview-v7:25.0.1'
 }

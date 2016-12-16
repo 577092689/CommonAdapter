@@ -5,7 +5,7 @@ package com.classic.adapter.interfaces;
  * 包 名 称: com.classic.adapter.interfaces
  *
  * 文件描述: 滑动隐藏接口
- * 创 建 人: 刘宾
+ * 创 建 人: 续写经典
  * 创建时间: 2016/9/9 17:29
  */
 public interface IScrollHideListener {

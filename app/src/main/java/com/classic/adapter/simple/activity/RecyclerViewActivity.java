@@ -2,6 +2,7 @@ package com.classic.adapter.simple.activity;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -17,6 +18,7 @@ import com.classic.adapter.simple.consts.Consts;
 import com.classic.adapter.simple.data.NewsDataSource;
 import com.classic.adapter.simple.imageload.PicassoImageLoad;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -24,6 +26,7 @@ import java.util.Locale;
 public class RecyclerViewActivity extends DemoActivity
         implements CommonRecyclerAdapter.OnItemClickListener,
                    CommonRecyclerAdapter.OnItemLongClickListener {
+
     private RecyclerView mRecyclerView;
     private NewsAdapter  mNewsAdapter;
     private ImageLoad    mImageLoad;
@@ -53,34 +56,41 @@ public class RecyclerViewActivity extends DemoActivity
     }
 
     @Override protected void testReplaceAll() {
-        mNewsAdapter.replaceAll(NewsDataSource.getReplaceList());
-        //
-        //final ArrayList<News> newData = NewsDataSource.getReplaceList();
-        //mNewsAdapter.replaceAll(newData, new DiffUtil.Callback() {
-        //    @Override public int getOldListSize() {
-        //        return mNewsAdapter.getItemCount();
-        //    }
-        //
-        //    @Override public int getNewListSize() {
-        //        return newData.size();
-        //    }
-        //
-        //    @Override public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
-        //        //判断对象的id是否相等
-        //        return  oldItemPosition < mNewsAdapter.getItemCount() && //防止下标越界
-        //                mNewsAdapter.getItem(oldItemPosition).getId() ==
-        //                newData.get(newItemPosition).getId();
-        //    }
-        //
-        //    @Override public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
-        //        //判断对象的内容是否相等
-        //        return oldItemPosition < mNewsAdapter.getItemCount() && //防止下标越界
-        //                mNewsAdapter.getItem(oldItemPosition).getTitle().equals(
-        //                newData.get(newItemPosition).getTitle()) &&
-        //               mNewsAdapter.getItem(oldItemPosition).getIntro().equals(
-        //                       newData.get(newItemPosition).getIntro());
-        //    }
-        //});
+        final ArrayList<News> newData = NewsDataSource.getReplaceList();
+        final DiffUtil.Callback mCallback = new DiffUtil.Callback() {
+            @Override public int getOldListSize() {
+                return mNewsAdapter.getData().size();
+            }
+
+            @Override public int getNewListSize() {
+                return newData.size();
+            }
+
+            @Override public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
+                //判断对象是否相等
+                return mNewsAdapter.getItem(oldItemPosition).getId() ==
+                        newData.get(newItemPosition).getId();
+            }
+
+            @Override public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
+                //判断对象的内容是否相等
+                return mNewsAdapter.getItem(oldItemPosition).getTitle().equals(
+                                newData.get(newItemPosition).getTitle()) &&
+                        mNewsAdapter.getItem(oldItemPosition).getIntro().equals(
+                                newData.get(newItemPosition).getIntro());
+            }
+        };
+        new Thread(new Runnable() {
+            @Override public void run() {
+                final DiffUtil.DiffResult result = DiffUtil.calculateDiff(mCallback, true);
+                runOnUiThread(new Runnable() {
+                    @Override public void run() {
+                        mNewsAdapter.replaceAll(newData, false);
+                        result.dispatchUpdatesTo(mNewsAdapter);
+                    }
+                });
+            }
+        }).start();
     }
 
     @Override protected void onCreate(Bundle savedInstanceState) {

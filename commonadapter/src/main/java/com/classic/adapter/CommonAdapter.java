@@ -4,8 +4,10 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+
 import com.classic.adapter.interfaces.IAdapter;
 import com.classic.adapter.interfaces.IData;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,11 +16,13 @@ import static com.classic.adapter.BaseAdapterHelper.get;
 /**
  * 项目名称: CommonAdapter
  * 包 名 称: com.classic.adapter
+ *
  * 类 描 述: 通用Adapter,适用于ListView/GridView,简化大量重复代码
  * 创 建 人: 续写经典
  * 创建时间: 2016/1/27 17:50.
  */
-public abstract class CommonAdapter<T> extends BaseAdapter implements IData<T>, IAdapter<T> {
+@SuppressWarnings({ "unused", "WeakerAccess" }) public abstract class CommonAdapter<T>
+        extends BaseAdapter implements IData<T>, IAdapter<T> {
     private final Context mContext;
     private final int     mLayoutResId;
     private final List<T> mData;
@@ -55,8 +59,8 @@ public abstract class CommonAdapter<T> extends BaseAdapter implements IData<T>, 
 
     @Override public View getView(int position, View convertView, ViewGroup parent) {
         final T item = getItem(position);
-        final BaseAdapterHelper helper =
-            get(mContext, convertView, parent, getLayoutResId(item, position), position);
+        final BaseAdapterHelper helper = get(mContext, convertView, parent,
+                getLayoutResId(item, position), position);
         onUpdate(helper, item, position);
         helper.setAssociatedObject(item);
         return helper.getView();
@@ -66,27 +70,27 @@ public abstract class CommonAdapter<T> extends BaseAdapter implements IData<T>, 
         return position < mData.size();
     }
 
-    @Override public void add(T elem) {
-        mData.add(elem);
+    @Override public void add(T item) {
+        mData.add(item);
         notifyDataSetChanged();
     }
 
-    @Override public void addAll(List<T> elem) {
-        mData.addAll(elem);
+    @Override public void addAll(List<T> list) {
+        mData.addAll(list);
         notifyDataSetChanged();
     }
 
-    @Override public void set(T oldElem, T newElem) {
-        set(mData.indexOf(oldElem), newElem);
+    @Override public void set(T oldItem, T newItem) {
+        set(mData.indexOf(oldItem), newItem);
     }
 
-    @Override public void set(int index, T elem) {
-        mData.set(index, elem);
+    @Override public void set(int index, T item) {
+        mData.set(index, item);
         notifyDataSetChanged();
     }
 
-    @Override public void remove(T elem) {
-        mData.remove(elem);
+    @Override public void remove(T item) {
+        mData.remove(item);
         notifyDataSetChanged();
     }
 
@@ -95,14 +99,14 @@ public abstract class CommonAdapter<T> extends BaseAdapter implements IData<T>, 
         notifyDataSetChanged();
     }
 
-    @Override public void replaceAll(List<T> elem) {
+    @Override public void replaceAll(List<T> item) {
         mData.clear();
-        mData.addAll(elem);
+        mData.addAll(item);
         notifyDataSetChanged();
     }
 
-    @Override public boolean contains(T elem) {
-        return mData.contains(elem);
+    @Override public boolean contains(T item) {
+        return mData.contains(item);
     }
 
     @Override public void clear() {

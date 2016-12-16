@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -47,11 +47,12 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.TextView;
+
 import com.classic.adapter.interfaces.ImageLoad;
 
 /**
  * @author Joan Zapata
- * Allows an abstraction of the ViewHolder pattern.
+ *         Allows an abstraction of the ViewHolder pattern.
  */
 @SuppressWarnings("unused") public class BaseAdapterHelper {
 
@@ -59,13 +60,12 @@ import com.classic.adapter.interfaces.ImageLoad;
     private final SparseArray<View> mViews;
     private final Context           mContext;
 
-    private View        mConvertView;
-    private int         mPosition;
-    private int         mLayoutId;
-    private ImageLoad   mImageLoad;
+    private View      mConvertView;
+    private int       mPosition;
+    private int       mLayoutId;
+    private ImageLoad mImageLoad;
     /** Package private field to retain the associated user object and detect a change */
     Object mAssociatedObject;
-
 
     protected BaseAdapterHelper(Context context, ViewGroup parent, int layoutId, int position) {
         this.mContext = context;
@@ -74,26 +74,27 @@ import com.classic.adapter.interfaces.ImageLoad;
         this.mViews = new SparseArray<>();
         mConvertView = LayoutInflater.from(context).inflate(layoutId, parent, false);
         mConvertView.setTag(this);
-        if(null != com.classic.adapter.Adapter.singleton &&
-                null != com.classic.adapter.Adapter.singleton.getImageLoad()){
+        if (null != com.classic.adapter.Adapter.singleton &&
+            null != com.classic.adapter.Adapter.singleton.getImageLoad()) {
             mImageLoad = com.classic.adapter.Adapter.singleton.getImageLoad();
         }
     }
 
-
     /**
      * This method is the only entry point to get a BaseAdapterHelper.
-     * @param context     The current context.
+     *
+     * @param context The current context.
      * @param convertView The convertView arg passed to the getView() method.
-     * @param parent      The parent arg passed to the getView() method.
+     * @param parent The parent arg passed to the getView() method.
      * @return A BaseAdapterHelper instance.
      */
-    public static BaseAdapterHelper get(Context context, View convertView, ViewGroup parent, int layoutId) {
+    public static BaseAdapterHelper get(Context context, View convertView, ViewGroup parent,
+                                        int layoutId) {
         return get(context, convertView, parent, layoutId, -1);
     }
 
-
-    static BaseAdapterHelper get(Context context, View convertView, ViewGroup parent, int layoutId, int position) {
+    static BaseAdapterHelper get(Context context, View convertView, ViewGroup parent, int layoutId,
+                                 int position) {
         if (convertView == null) {
             return new BaseAdapterHelper(context, parent, layoutId, position);
         }
@@ -109,12 +110,12 @@ import com.classic.adapter.interfaces.ImageLoad;
         return existingHelper;
     }
 
-
     /**
      * This method allows you to retrieve a view and perform custom
      * operations on it, not covered by the BaseAdapterHelper.
      * If you think it's a common use case, please consider creating
      * a new issue at https://github.com/JoanZapata/base-adapter-helper/issues.
+     *
      * @param viewId The id of the view you want to retrieve.
      */
     public <T extends View> T getView(@IdRes int viewId) {
@@ -130,8 +131,9 @@ import com.classic.adapter.interfaces.ImageLoad;
 
     /**
      * Will set background color of a view.
+     *
      * @param viewId The view id.
-     * @param color  A color, not a resource id.
+     * @param color A color, not a resource id.
      * @return The BaseAdapterHelper for chaining.
      */
     public BaseAdapterHelper setBackgroundColor(@IdRes int viewId, @ColorInt int color) {
@@ -142,7 +144,8 @@ import com.classic.adapter.interfaces.ImageLoad;
 
     /**
      * Will set background of a view.
-     * @param viewId        The view id.
+     *
+     * @param viewId The view id.
      * @param backgroundRes A resource to use as a background.
      * @return The BaseAdapterHelper for chaining.
      */
@@ -154,8 +157,9 @@ import com.classic.adapter.interfaces.ImageLoad;
 
     /**
      * Will set the text of a TextView.
+     *
      * @param viewId The view id.
-     * @param value  The text to put in the text view.
+     * @param value The text to put in the text view.
      * @return The BaseAdapterHelper for chaining.
      */
     public BaseAdapterHelper setText(@IdRes int viewId, CharSequence value) {
@@ -172,7 +176,8 @@ import com.classic.adapter.interfaces.ImageLoad;
 
     /**
      * Will set text color of a TextView.
-     * @param viewId    The view id.
+     *
+     * @param viewId The view id.
      * @param textColor The text color (not a resource id).
      * @return The BaseAdapterHelper for chaining.
      */
@@ -184,7 +189,8 @@ import com.classic.adapter.interfaces.ImageLoad;
 
     /**
      * Will set text color of a TextView.
-     * @param viewId       The view id.
+     *
+     * @param viewId The view id.
      * @param textColorRes The text color resource id.
      * @return The BaseAdapterHelper for chaining.
      */
@@ -196,15 +202,15 @@ import com.classic.adapter.interfaces.ImageLoad;
 
     /**
      * Will set text color of a TextView.
-     * @param viewId       The view id.
+     *
+     * @param viewId The view id.
      * @param textColorRes The text color resource id.
      * @param theme theme The theme used to style the color attributes, may be
-     *              {@code null}.
+     * {@code null}.
      * @return The BaseAdapterHelper for chaining.
      */
-    @TargetApi(Build.VERSION_CODES.M)
-    public BaseAdapterHelper setTextColorRes(@IdRes int viewId, @ColorRes int textColorRes,
-                                             @Nullable Resources.Theme theme) {
+    @TargetApi(Build.VERSION_CODES.M) public BaseAdapterHelper setTextColorRes(
+            @IdRes int viewId, @ColorRes int textColorRes, @Nullable Resources.Theme theme) {
         TextView view = retrieveView(viewId);
         view.setTextColor(mContext.getResources().getColor(textColorRes, theme));
         return this;
@@ -219,7 +225,8 @@ import com.classic.adapter.interfaces.ImageLoad;
 
     /**
      * Will set the image of an ImageView from a resource id.
-     * @param viewId     The view id.
+     *
+     * @param viewId The view id.
      * @param imageResId The image resource id.
      * @return The BaseAdapterHelper for chaining.
      */
@@ -231,7 +238,8 @@ import com.classic.adapter.interfaces.ImageLoad;
 
     /**
      * Will set the image of an ImageView from a drawable.
-     * @param viewId   The view id.
+     *
+     * @param viewId The view id.
      * @param drawable The image drawable.
      * @return The BaseAdapterHelper for chaining.
      */
@@ -243,20 +251,21 @@ import com.classic.adapter.interfaces.ImageLoad;
 
     /**
      * Will download an image from a URL and put it in an ImageView.
-     * @param viewId   The view id.
+     *
+     * @param viewId The view id.
      * @param imageUrl The image URL.
      * @return The BaseAdapterHelper for chaining.
      */
     public BaseAdapterHelper setImageUrl(@IdRes int viewId, @NonNull String imageUrl) {
         ImageView view = retrieveView(viewId);
-        if(null != this.mImageLoad){
+        if (null != this.mImageLoad) {
             this.mImageLoad.load(mContext, view, imageUrl);
         }
         return this;
     }
 
     /** Custom network load images */
-    public BaseAdapterHelper setImageLoad(@NonNull ImageLoad imageLoad){
+    public BaseAdapterHelper setImageLoad(@NonNull ImageLoad imageLoad) {
         this.mImageLoad = imageLoad;
         return this;
     }
@@ -272,7 +281,8 @@ import com.classic.adapter.interfaces.ImageLoad;
      * Add an action to set the alpha of a view. Can be called multiple times.
      * Alpha between 0-1.
      */
-    public BaseAdapterHelper setAlpha(@IdRes int viewId, @FloatRange(from=0.0, to=1.0) float value) {
+    public BaseAdapterHelper setAlpha(
+            @IdRes int viewId, @FloatRange(from = 0.0, to = 1.0) float value) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             retrieveView(viewId).setAlpha(value);
         } else {
@@ -287,7 +297,8 @@ import com.classic.adapter.interfaces.ImageLoad;
 
     /**
      * Set a view visibility to VISIBLE (true) or GONE (false).
-     * @param viewId  The view id.
+     *
+     * @param viewId The view id.
      * @param visible True for VISIBLE, false for GONE.
      * @return The BaseAdapterHelper for chaining.
      */
@@ -315,7 +326,8 @@ import com.classic.adapter.interfaces.ImageLoad;
         return this;
     }
 
-    public BaseAdapterHelper setFocusableInTouchMode(@IdRes int viewId, boolean focusableInTouchMode) {
+    public BaseAdapterHelper setFocusableInTouchMode(
+            @IdRes int viewId, boolean focusableInTouchMode) {
         View view = retrieveView(viewId);
         view.setFocusableInTouchMode(focusableInTouchMode);
         return this;
@@ -323,6 +335,7 @@ import com.classic.adapter.interfaces.ImageLoad;
 
     /**
      * Add links into a TextView.
+     *
      * @param viewId The id of the TextView to linkify.
      * @return The BaseAdapterHelper for chaining.
      */
@@ -334,10 +347,10 @@ import com.classic.adapter.interfaces.ImageLoad;
 
     /**
      * Add links into a TextView.
+     *
      * @param viewId The id of the TextView to linkify.
-     * @param mask
-     * @see android.text.util.Linkify#addLinks(TextView text, int mask)
      * @return The BaseAdapterHelper for chaining.
+     * @see android.text.util.Linkify#addLinks(TextView text, int mask)
      */
     public BaseAdapterHelper addLinks(@IdRes int viewId, int mask) {
         TextView view = retrieveView(viewId);
@@ -365,7 +378,8 @@ import com.classic.adapter.interfaces.ImageLoad;
 
     /**
      * Sets the progress of a ProgressBar.
-     * @param viewId   The view id.
+     *
+     * @param viewId The view id.
      * @param progress The progress.
      * @return The BaseAdapterHelper for chaining.
      */
@@ -377,9 +391,10 @@ import com.classic.adapter.interfaces.ImageLoad;
 
     /**
      * Sets the progress and max of a ProgressBar.
-     * @param viewId   The view id.
+     *
+     * @param viewId The view id.
      * @param progress The progress.
-     * @param max      The max value of a ProgressBar.
+     * @param max The max value of a ProgressBar.
      * @return The BaseAdapterHelper for chaining.
      */
     public BaseAdapterHelper setProgress(@IdRes int viewId, int progress, int max) {
@@ -391,8 +406,9 @@ import com.classic.adapter.interfaces.ImageLoad;
 
     /**
      * Sets the range of a ProgressBar to 0...max.
+     *
      * @param viewId The view id.
-     * @param max    The max value of a ProgressBar.
+     * @param max The max value of a ProgressBar.
      * @return The BaseAdapterHelper for chaining.
      */
     public BaseAdapterHelper setMax(@IdRes int viewId, int max) {
@@ -403,6 +419,7 @@ import com.classic.adapter.interfaces.ImageLoad;
 
     /**
      * Sets the rating (the number of stars filled) of a RatingBar.
+     *
      * @param viewId The view id.
      * @param rating The rating.
      * @return The BaseAdapterHelper for chaining.
@@ -415,9 +432,10 @@ import com.classic.adapter.interfaces.ImageLoad;
 
     /**
      * Sets the rating (the number of stars filled) and max of a RatingBar.
+     *
      * @param viewId The view id.
      * @param rating The rating.
-     * @param max    The range of the RatingBar to 0...max.
+     * @param max The range of the RatingBar to 0...max.
      * @return The BaseAdapterHelper for chaining.
      */
     public BaseAdapterHelper setRating(@IdRes int viewId, float rating, int max) {
@@ -429,11 +447,13 @@ import com.classic.adapter.interfaces.ImageLoad;
 
     /**
      * Sets the on click listener of the view.
-     * @param viewId   The view id.
+     *
+     * @param viewId The view id.
      * @param listener The on click listener;
      * @return The BaseAdapterHelper for chaining.
      */
-    public BaseAdapterHelper setOnClickListener(@IdRes int viewId, @NonNull View.OnClickListener listener) {
+    public BaseAdapterHelper setOnClickListener(
+            @IdRes int viewId, @NonNull View.OnClickListener listener) {
         View view = retrieveView(viewId);
         view.setOnClickListener(listener);
         return this;
@@ -441,11 +461,13 @@ import com.classic.adapter.interfaces.ImageLoad;
 
     /**
      * Sets the on touch listener of the view.
-     * @param viewId   The view id.
+     *
+     * @param viewId The view id.
      * @param listener The on touch listener;
      * @return The BaseAdapterHelper for chaining.
      */
-    public BaseAdapterHelper setOnTouchListener(@IdRes int viewId, @NonNull View.OnTouchListener listener) {
+    public BaseAdapterHelper setOnTouchListener(
+            @IdRes int viewId, @NonNull View.OnTouchListener listener) {
         View view = retrieveView(viewId);
         view.setOnTouchListener(listener);
         return this;
@@ -453,11 +475,13 @@ import com.classic.adapter.interfaces.ImageLoad;
 
     /**
      * Sets the on long click listener of the view.
-     * @param viewId   The view id.
+     *
+     * @param viewId The view id.
      * @param listener The on long click listener;
      * @return The BaseAdapterHelper for chaining.
      */
-    public BaseAdapterHelper setOnLongClickListener(@IdRes int viewId, @NonNull View.OnLongClickListener listener) {
+    public BaseAdapterHelper setOnLongClickListener(
+            @IdRes int viewId, @NonNull View.OnLongClickListener listener) {
         View view = retrieveView(viewId);
         view.setOnLongClickListener(listener);
         return this;
@@ -465,44 +489,51 @@ import com.classic.adapter.interfaces.ImageLoad;
 
     /**
      * Sets the listview or gridview's item click listener of the view
-     * @param viewId  The view id.
+     *
+     * @param viewId The view id.
      * @param listener The item on click listener;
      * @return The BaseAdapterHelper for chaining.
      */
-    public BaseAdapterHelper setOnItemClickListener(@IdRes int viewId,
-                                                    @NonNull AdapterView.OnItemClickListener listener) {
+    public BaseAdapterHelper setOnItemClickListener(
+            @IdRes int viewId, @NonNull AdapterView.OnItemClickListener listener) {
         AdapterView view = retrieveView(viewId);
         view.setOnItemClickListener(listener);
         return this;
     }
+
     /**
      * Sets the listview or gridview's item long click listener of the view
+     *
      * @param viewId The view id.
-     * @param listener   The item long click listener;
+     * @param listener The item long click listener;
      * @return The BaseAdapterHelper for chaining.
      */
-    public BaseAdapterHelper setOnItemLongClickListener(@IdRes int viewId,
-                                                        @NonNull AdapterView.OnItemLongClickListener listener) {
+    public BaseAdapterHelper setOnItemLongClickListener(
+            @IdRes int viewId, @NonNull AdapterView.OnItemLongClickListener listener) {
         AdapterView view = retrieveView(viewId);
         view.setOnItemLongClickListener(listener);
         return this;
     }
+
     /**
      * Sets the listview or gridview's item selected click listener of the view
+     *
      * @param viewId The view id.
      * @param listener The item selected click listener;
      * @return The BaseAdapterHelper for chaining.
      */
-    public BaseAdapterHelper setOnItemSelectedClickListener(@IdRes int viewId,
-                                                            @NonNull AdapterView.OnItemSelectedListener listener) {
+    public BaseAdapterHelper setOnItemSelectedClickListener(
+            @IdRes int viewId, @NonNull AdapterView.OnItemSelectedListener listener) {
         AdapterView view = retrieveView(viewId);
         view.setOnItemSelectedListener(listener);
         return this;
     }
+
     /**
      * Sets the tag of the view.
+     *
      * @param viewId The view id.
-     * @param tag    The tag;
+     * @param tag The tag;
      * @return The BaseAdapterHelper for chaining.
      */
     public BaseAdapterHelper setTag(@IdRes int viewId, @NonNull Object tag) {
@@ -513,9 +544,10 @@ import com.classic.adapter.interfaces.ImageLoad;
 
     /**
      * Sets the tag of the view.
+     *
      * @param viewId The view id.
-     * @param key    The key of tag;
-     * @param tag    The tag;
+     * @param key The key of tag;
+     * @param tag The tag;
      * @return The BaseAdapterHelper for chaining.
      */
     public BaseAdapterHelper setTag(@IdRes int viewId, int key, @NonNull Object tag) {
@@ -526,7 +558,8 @@ import com.classic.adapter.interfaces.ImageLoad;
 
     /**
      * Sets the checked status of a checkable.
-     * @param viewId  The view id.
+     *
+     * @param viewId The view id.
      * @param checked The checked status;
      * @return The BaseAdapterHelper for chaining.
      */
@@ -542,12 +575,13 @@ import com.classic.adapter.interfaces.ImageLoad;
 
     /**
      * Sets the adapter of a adapter view.
-     * @param viewId  The view id.
+     *
+     * @param viewId The view id.
      * @param adapter The adapter;
      * @return The BaseAdapterHelper for chaining.
      */
-    @SuppressWarnings("unchecked")
-    public BaseAdapterHelper setAdapter(@IdRes int viewId, @NonNull Adapter adapter) {
+    @SuppressWarnings("unchecked") public BaseAdapterHelper setAdapter(
+            @IdRes int viewId, @NonNull Adapter adapter) {
         AdapterView view = retrieveView(viewId);
         view.setAdapter(adapter);
         return this;
@@ -560,17 +594,19 @@ import com.classic.adapter.interfaces.ImageLoad;
 
     /**
      * Retrieve the overall mPosition of the mData in the list.
-     * @throws IllegalArgumentException If the mPosition hasn't been set at the construction of the this helper.
+     *
+     * @throws IllegalArgumentException If the mPosition hasn't been set at the construction of the
+     * this helper.
      */
     public int getPosition() {
-        if (mPosition == -1)
+        if (mPosition == -1) {
             throw new IllegalStateException("Use BaseAdapterHelper constructor " +
-                    "with mPosition if you need to retrieve the mPosition.");
+                                            "with mPosition if you need to retrieve the mPosition.");
+        }
         return mPosition;
     }
 
-    @SuppressWarnings("unchecked")
-    protected <T extends View> T retrieveView(@IdRes int viewId) {
+    @SuppressWarnings("unchecked") protected <T extends View> T retrieveView(@IdRes int viewId) {
         View view = mViews.get(viewId);
         if (view == null) {
             view = mConvertView.findViewById(viewId);
@@ -588,5 +624,4 @@ import com.classic.adapter.interfaces.ImageLoad;
     public void setAssociatedObject(Object associatedObject) {
         this.mAssociatedObject = associatedObject;
     }
-
 }

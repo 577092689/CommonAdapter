@@ -2,6 +2,9 @@ package com.classic.adapter.simple.activity;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,6 +18,7 @@ import com.classic.adapter.simple.bean.News;
 import com.classic.adapter.simple.consts.Consts;
 import com.classic.adapter.simple.data.NewsDataSource;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -22,6 +26,11 @@ import java.util.Locale;
 public class RecyclerViewSimpleActivity extends DemoActivity
         implements CommonRecyclerAdapter.OnItemClickListener,
                    CommonRecyclerAdapter.OnItemLongClickListener {
+
+    private static final String KEY_TITLE     = "title";
+    private static final String KEY_INTRO     = "intro";
+    private static final String KEY_AUTHOR    = "author";
+
     private RecyclerView mRecyclerView;
     private NewsAdapter  mNewsAdapter;
 
@@ -50,7 +59,60 @@ public class RecyclerViewSimpleActivity extends DemoActivity
     }
 
     @Override protected void testReplaceAll() {
-        mNewsAdapter.replaceAll(NewsDataSource.getReplaceList());
+        final ArrayList<News> newData = NewsDataSource.getSimpleReplaceList(10);
+        final DiffUtil.Callback mCallback = new DiffUtil.Callback() {
+            @Override public int getOldListSize() {
+                return mNewsAdapter.getData().size();
+            }
+
+            @Override public int getNewListSize() {
+                return newData.size();
+            }
+
+            @Override public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
+                //判断对象是否相等
+                return mNewsAdapter.getItem(oldItemPosition).getId() ==
+                       newData.get(newItemPosition).getId();
+            }
+
+            @Override public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
+                //判断对象的内容是否相等
+                return mNewsAdapter.getItem(oldItemPosition).getTitle().equals(
+                        newData.get(newItemPosition).getTitle()) &&
+                       mNewsAdapter.getItem(oldItemPosition).getIntro().equals(
+                               newData.get(newItemPosition).getIntro());
+            }
+
+            // 更小粒度的更新，比如某个对象的某个属性值改变了，只改变此属性
+            // 此方法为可选，这里只是提供一个使用示例
+            @Nullable @Override
+            public Object getChangePayload(int oldItemPosition, int newItemPosition) {
+                final News oldItem = mNewsAdapter.getItem(oldItemPosition);
+                final News newItem = newData.get(newItemPosition);
+                Bundle bundle = new Bundle();
+                if(!oldItem.getTitle().equals(newItem.getTitle())){
+                    bundle.putString(KEY_TITLE, newItem.getTitle());
+                }
+                if(!oldItem.getAuthor().equals(newItem.getAuthor())){
+                    bundle.putString(KEY_AUTHOR, newItem.getAuthor());
+                }
+                if(!oldItem.getIntro().equals(newItem.getIntro())){
+                    bundle.putString(KEY_INTRO, newItem.getIntro());
+                }
+                return bundle.size() == 0 ? null : bundle;
+            }
+        };
+        new Thread(new Runnable() {
+            @Override public void run() {
+                final DiffUtil.DiffResult result = DiffUtil.calculateDiff(mCallback, true);
+                runOnUiThread(new Runnable() {
+                    @Override public void run() {
+                        mNewsAdapter.replaceAll(newData, false);
+                        result.dispatchUpdatesTo(mNewsAdapter);
+                    }
+                });
+            }
+        }).start();
     }
 
     @Override protected void onCreate(Bundle savedInstanceState) {
@@ -91,6 +153,32 @@ public class RecyclerViewSimpleActivity extends DemoActivity
                   .setText(R.id.item_none_picture_date,
                           Consts.DATE_FORMAT.format(new Date(item.getReleaseTime())))
                   .setText(R.id.item_none_picture_intro, item.getIntro());
+        }
+
+        /**
+         * 更小粒度的更新，比如某个对象的某个属性值改变了，只改变此属性
+         * 如果你重写了DiffUtil.Callback的getChangePayload方法，此回调才会执行
+         *
+         * @param helper
+         * @param payloads
+         */
+        @Override public void onItemContentChanged(
+                @NonNull BaseAdapterHelper helper, @NonNull List<Object> payloads) {
+            Bundle bundle = (Bundle) payloads.get(0);
+            for(String key : bundle.keySet()){
+                final String value = bundle.getString(key);
+                switch (key) {
+                    case KEY_TITLE:
+                        helper.setText(R.id.item_none_picture_title, value);
+                        break;
+                    case KEY_AUTHOR:
+                        helper.setText(R.id.item_none_picture_author, value);
+                        break;
+                    case KEY_INTRO:
+                        helper.setText(R.id.item_none_picture_intro, value);
+                        break;
+                }
+            }
         }
     }
 }

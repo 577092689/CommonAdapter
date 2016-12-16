@@ -7,16 +7,19 @@ import com.classic.adapter.interfaces.ImageLoad;
 /**
  * 项目名称: CommonAdapter
  * 包 名 称: com.classic.adapter
+ *
  * 类 描 述: Adapter全局配置
  * 创 建 人: 续写经典
  * 创建时间: 2016/11/27 17:54.
  */
-public final class Adapter {
+@SuppressWarnings({ "WeakerAccess", "unused" }) public final class Adapter {
     static volatile Adapter singleton = null;
 
     private ImageLoad mImageLoadImpl;
 
-    private Adapter(Builder builder) {mImageLoadImpl = builder.mImageLoadImpl;}
+    private Adapter(Builder builder) {
+        mImageLoadImpl = builder.mImageLoadImpl;
+    }
 
     public ImageLoad getImageLoad() {
         return mImageLoadImpl;
@@ -36,14 +39,15 @@ public final class Adapter {
     public static final class Builder {
         private ImageLoad mImageLoadImpl;
 
-        public Builder() {}
+        public Builder() { }
 
         public Builder setImageLoad(ImageLoad imageLoad) {
             mImageLoadImpl = imageLoad;
             return this;
         }
 
-        public Adapter build() {return new Adapter(this);}
+        public Adapter build() {
+            return new Adapter(this);
+        }
     }
-
 }

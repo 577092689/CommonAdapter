@@ -36,8 +36,8 @@ public final class NewsDataSource {
     public static ArrayList<News> getReplaceList(){
         if(null == sReplaceList || sReplaceList.isEmpty()){
             sReplaceList = new ArrayList<>();
-            sReplaceList.add(new News(1, News.TYPE_SINGLE_PICTURE, AUTHOR, "new谷歌返华前兆？桥头堡Google Play降低门槛", "北京时间1月26日上午消息，谷歌今日在Play Games中取消了强制使用Google+登录的要求，允许没有谷歌帐号的新用户全面使用这项服务。有相关评论称，此举或意味着谷歌返华又更近了一步。", "http://n.sinaimg.cn/tech/transform/20160126/g8H_-fxnvhvu7058461.jpg"));
             sReplaceList.add(new News(2, News.TYPE_NONE_PICTURE, AUTHOR, "河北工商局：三大运营商涉嫌不正当竞争", "记者从河北省工商局获悉，中国移动河北分公司、中国联通河北分公司、中国电信河北分公司等电信运营商采取赠与学校领导、班主任、联系人老师话费的方式，向广大学生强行推销“校讯通”“家校通”“翼校通”等产品，涉嫌违反《中华人民共和国反不正当竞争法》。"));
+            sReplaceList.add(new News(1, News.TYPE_SINGLE_PICTURE, AUTHOR, "new谷歌返华前兆？桥头堡Google Play降低门槛", "北京时间1月26日上午消息，谷歌今日在Play Games中取消了强制使用Google+登录的要求，允许没有谷歌帐号的新用户全面使用这项服务。有相关评论称，此举或意味着谷歌返华又更近了一步。", "http://n.sinaimg.cn/tech/transform/20160126/g8H_-fxnvhvu7058461.jpg"));
             sReplaceList.add(new News(3, News.TYPE_MULTIPLE_PICTURE, AUTHOR, "new杭州零下9度 一夜寒风吹冻西湖", "1月25日清晨，西湖雷峰塔景区冰封美景醉人，当日，受霸王级寒潮影响，杭州主城区出现最低-9.3℃气温，逼近1969年的历史极值，受此影响，杭州西湖部分水域出现严重结冰现象。", "http://www.sinaimg.cn/dy/slidenews/1_img/2016_04/2841_656896_533796.jpg;http://www.sinaimg.cn/dy/slidenews/1_img/2016_04/2841_656904_171122.jpg"));
             sReplaceList.add(new News(4, News.TYPE_SINGLE_PICTURE, AUTHOR, "创投机构回应上海政府风投补偿：返税意义更大", "引力创投是落户上海的早期投资机构，其合伙人戴周颖在接受新浪科技采访时认为，上海市此举还是属于招商引资的一个办法。在此之前，上海市就有专门的政策和方案，通过引导基金的方式，让更多GP(基金管理合伙人)注入上海，并且基金须有一定比例投资上海。", "http://n.sinaimg.cn/tech/transform/20160126/KR43-fxnuvxc1994221.jpg"));
             sReplaceList.add(new News(5, News.TYPE_NONE_PICTURE, AUTHOR, "new上海新规：天使投资有损失可获补偿 最高补六成", "近日，上海市科学技术委员会、上海市财政局、上海市发改委联合发布《上海市天使投资风险补偿管理暂行办法》，提出对投资机构投资种子期、初创期科技型企业，最终回收的转让收入与退出前累计投入该企业的投资额之间的差额部分，给予以一定比例的财务补偿。"));
@@ -55,6 +55,14 @@ public final class NewsDataSource {
             sReplaceList.add(new News(17, News.TYPE_NONE_PICTURE, AUTHOR, "new圆通延吉店老板跑路 大量快件滞留", "临近春节，又一家快递加盟公司停摆：圆通延吉公司老板被曝拖欠员工工资，疑似跑路，大量快件堆放在网点外，无人管理。去年“双11”至今，不仅是圆通，加盟制快递企业“四通一达”其余的申通、中通、百世汇通和韵达也均被媒体曝出部分加盟网点出现疑似停工、倒闭等情况。伴随着电商的红火，借势而盛的加盟制快递企业，为何在近期接连遭遇“寒潮”？快递企业又该如何加强管理和制度创新，提供更好的服务呢？"));
         }
         return sReplaceList;
+    }
+
+    public static ArrayList<News> getSimpleReplaceList(int size){
+        ArrayList<News> newses = new ArrayList<>();
+        for (int i = 0; i < size; i++) {
+            newses.add(randomData("Title by Replace ", "Replace item "));
+        }
+        return newses;
     }
 
     public static ArrayList<News> getAddList(int size){
