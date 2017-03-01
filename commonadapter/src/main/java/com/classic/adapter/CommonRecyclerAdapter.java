@@ -36,11 +36,11 @@ import static com.classic.adapter.BaseAdapterHelper.get;
     private OnItemClickListener     mItemClickListener;
     private OnItemLongClickListener mItemLongClickListener;
 
-    public CommonRecyclerAdapter(Context context, int layoutResId) {
+    public CommonRecyclerAdapter(@NonNull Context context, int layoutResId) {
         this(context, layoutResId, null);
     }
 
-    public CommonRecyclerAdapter(Context context, int layoutResId, List<T> data) {
+    public CommonRecyclerAdapter(@NonNull Context context, int layoutResId, List<T> data) {
         this.mData = data == null ? new ArrayList<T>() : new ArrayList<>(data);
         this.mContext = context;
         this.mLayoutResId = layoutResId;
@@ -89,41 +89,43 @@ import static com.classic.adapter.BaseAdapterHelper.get;
         return mData;
     }
 
-    @Override public void add(T item) {
+    @Override public void add(@NonNull T item) {
         mData.add(item);
         notifyItemInserted(mData.size());
     }
 
-    @Override public void addAll(List<T> list) {
+    @Override public void addAll(@NonNull List<T> list) {
         mData.addAll(list);
         notifyItemRangeInserted(mData.size() - list.size(), list.size());
     }
 
-    @Override public void set(T oldItem, T newItem) {
+    @Override public void set(@NonNull T oldItem, @NonNull T newItem) {
         set(mData.indexOf(oldItem), newItem);
     }
 
-    @Override public void set(int index, T item) {
-        mData.set(index, item);
-        notifyItemChanged(index);
+    @Override public void set(int index, @NonNull T item) {
+        if (index >= 0 && index < getItemCount()) {
+            mData.set(index, item);
+            notifyItemChanged(index);
+        }
     }
 
-    @Override public void remove(T item) {
-        final int position = mData.indexOf(item);
-        mData.remove(item);
-        notifyItemRemoved(position);
+    @Override public void remove(@NonNull T item) {
+        remove(mData.indexOf(item));
     }
 
     @Override public void remove(int index) {
-        mData.remove(index);
-        notifyItemRemoved(index);
+        if (index >= 0 && index < getItemCount()) {
+            mData.remove(index);
+            notifyItemRemoved(index);
+        }
     }
 
-    @Override public void replaceAll(List<T> item) {
+    @Override public void replaceAll(@NonNull List<T> item) {
         replaceAll(item, true);
     }
 
-    @Override public boolean contains(T item) {
+    @Override public boolean contains(@NonNull T item) {
         return mData.contains(item);
     }
 
@@ -132,7 +134,7 @@ import static com.classic.adapter.BaseAdapterHelper.get;
         notifyDataSetChanged();
     }
 
-    public void replaceAll(List<T> elem, boolean notifyDataSetChanged) {
+    public void replaceAll(@NonNull List<T> elem, boolean notifyDataSetChanged) {
         mData.clear();
         mData.addAll(elem);
         if (notifyDataSetChanged) {

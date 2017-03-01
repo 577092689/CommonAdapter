@@ -1,6 +1,7 @@
 package com.classic.adapter;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -27,11 +28,11 @@ import static com.classic.adapter.BaseAdapterHelper.get;
     private final int     mLayoutResId;
     private final List<T> mData;
 
-    public CommonAdapter(Context context, int layoutResId) {
+    public CommonAdapter(@NonNull Context context, int layoutResId) {
         this(context, layoutResId, null);
     }
 
-    public CommonAdapter(Context context, int layoutResId, List<T> data) {
+    public CommonAdapter(@NonNull Context context, int layoutResId, List<T> data) {
         this.mData = data == null ? new ArrayList<T>() : new ArrayList<>(data);
         this.mContext = context;
         this.mLayoutResId = layoutResId;
@@ -70,42 +71,46 @@ import static com.classic.adapter.BaseAdapterHelper.get;
         return position < mData.size();
     }
 
-    @Override public void add(T item) {
+    @Override public void add(@NonNull T item) {
         mData.add(item);
         notifyDataSetChanged();
     }
 
-    @Override public void addAll(List<T> list) {
+    @Override public void addAll(@NonNull List<T> list) {
         mData.addAll(list);
         notifyDataSetChanged();
     }
 
-    @Override public void set(T oldItem, T newItem) {
+    @Override public void set(@NonNull T oldItem, @NonNull T newItem) {
         set(mData.indexOf(oldItem), newItem);
     }
 
-    @Override public void set(int index, T item) {
-        mData.set(index, item);
-        notifyDataSetChanged();
+    @Override public void set(int index, @NonNull T item) {
+        if (index >= 0 && index < getCount()) {
+            mData.set(index, item);
+            notifyDataSetChanged();
+        }
     }
 
-    @Override public void remove(T item) {
+    @Override public void remove(@NonNull T item) {
         mData.remove(item);
         notifyDataSetChanged();
     }
 
     @Override public void remove(int index) {
-        mData.remove(index);
-        notifyDataSetChanged();
+        if (index >= 0 && index < getCount()) {
+            mData.remove(index);
+            notifyDataSetChanged();
+        }
     }
 
-    @Override public void replaceAll(List<T> item) {
+    @Override public void replaceAll(@NonNull List<T> item) {
         mData.clear();
         mData.addAll(item);
         notifyDataSetChanged();
     }
 
-    @Override public boolean contains(T item) {
+    @Override public boolean contains(@NonNull T item) {
         return mData.contains(item);
     }
 
