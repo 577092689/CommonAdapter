@@ -87,6 +87,9 @@ private final class MultipleLayoutAdapter extends CommonAdapter<News>{
 }
 ```
 RecyclerView 使用示例
+
+[使用 DiffUtil 高效更新 RecyclerView 点这里](https://github.com/qyxxjd/CommonAdapter/blob/master/app/src/main/java/com/classic/adapter/simple/activity/RecyclerViewSimpleActivity.java)
+
 ```java
 List<News> newsList = ...;
 //单布局文件

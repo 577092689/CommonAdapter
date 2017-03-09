@@ -57,7 +57,7 @@ public class RecyclerViewActivity extends DemoActivity
 
     @Override protected void testReplaceAll() {
         final ArrayList<News> newData = NewsDataSource.getReplaceList();
-        final DiffUtil.Callback mCallback = new DiffUtil.Callback() {
+        final DiffUtil.Callback callback = new DiffUtil.Callback() {
             @Override public int getOldListSize() {
                 return mNewsAdapter.getData().size();
             }
@@ -82,7 +82,7 @@ public class RecyclerViewActivity extends DemoActivity
         };
         new Thread(new Runnable() {
             @Override public void run() {
-                final DiffUtil.DiffResult result = DiffUtil.calculateDiff(mCallback, true);
+                final DiffUtil.DiffResult result = DiffUtil.calculateDiff(callback, true);
                 runOnUiThread(new Runnable() {
                     @Override public void run() {
                         mNewsAdapter.replaceAll(newData, false);
