@@ -12,16 +12,18 @@
 ![](https://github.com/qyxxjd/CommonAdapter/blob/master/screenshots/main.png)  ![](https://github.com/qyxxjd/CommonAdapter/blob/master/screenshots/simple.png)  ![](https://github.com/qyxxjd/CommonAdapter/blob/master/screenshots/multiple.png)
 
 
-##gradle依赖
+## gradle依赖
+
 ```gradle
 dependencies {
     compile 'com.classic.adapter:commonadapter:1.6'
     //项目中使用到RecyclerView,需要添加依赖
-    compile 'com.android.support:recyclerview-v7:25.2.0'
+    compile 'com.android.support:recyclerview-v7:25.3.0'
 }
 ```
 
-##开始使用
+## 开始使用
+
 ListView/GridView 使用示例
 ```java
 List<News> newsList = ...;
@@ -290,14 +292,17 @@ void clear();
 
 ```
 
-##感谢
+## 感谢
+
 [base-adapter-helper](https://github.com/JoanZapata/base-adapter-helper)
 
-##关于
+## 关于
+
 * Blog: [http://blog.csdn.net/qy1387](http://blog.csdn.net/qy1387)
 * Email: [pgliubin@gmail.com](http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=pgliubin@gmail.com)
 
-##License
+## License
+
 ```
 Copyright 2015 classic
 
