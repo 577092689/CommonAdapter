@@ -141,7 +141,7 @@ public class RecyclerViewActivity extends DemoActivity
             return layoutResId;
         }
 
-        @Override public void onUpdate(BaseAdapterHelper helper, News item, int position) {
+        @Override public void onUpdate(BaseAdapterHelper helper, final News item, final int position) {
             helper.setImageLoad(mImageLoad);
             switch (item.getNewsType()) {
                 case News.TYPE_NONE_PICTURE:
@@ -160,13 +160,31 @@ public class RecyclerViewActivity extends DemoActivity
                                           item.getAuthor()))
                           .setText(R.id.item_single_picture_date,
                                   Consts.DATE_FORMAT.format(new Date(item.getReleaseTime())))
-                          .setImageUrl(R.id.item_single_picture_cover, item.getCoverUrl());
+                          .setImageUrl(R.id.item_single_picture_cover, item.getCoverUrl())
+                          .setOnClickListener(R.id.item_single_picture_cover, new View.OnClickListener() {
+                              @Override public void onClick(View v) {
+                                  Toast.makeText(v.getContext(), position + "," + item.getTitle(), Toast.LENGTH_SHORT)
+                                       .show();
+                              }
+                          });
                     break;
-                case com.classic.adapter.simple.bean.News.TYPE_MULTIPLE_PICTURE:
+                case News.TYPE_MULTIPLE_PICTURE:
                     String[] urls = item.getCoverUrl().split(Consts.URL_SEPARATOR);
                     helper.setText(R.id.item_multiple_picture_intro, item.getIntro())
                           .setImageUrl(R.id.item_multiple_picture_cover_left, urls[0])
-                          .setImageUrl(R.id.item_multiple_picture_cover_right, urls[1]);
+                          .setImageUrl(R.id.item_multiple_picture_cover_right, urls[1])
+                          .setOnClickListener(R.id.item_multiple_picture_cover_left, new View.OnClickListener() {
+                              @Override public void onClick(View v) {
+                                  Toast.makeText(v.getContext(), "left:" + position + "," + item.getTitle(),
+                                                 Toast.LENGTH_SHORT).show();
+                              }
+                          })
+                          .setOnClickListener(R.id.item_multiple_picture_cover_right, new View.OnClickListener() {
+                              @Override public void onClick(View v) {
+                                  Toast.makeText(v.getContext(), "right:" + position + "," + item.getTitle(),
+                                                 Toast.LENGTH_SHORT).show();
+                              }
+                          });
                     break;
             }
         }

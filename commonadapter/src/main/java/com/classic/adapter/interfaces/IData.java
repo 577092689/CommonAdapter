@@ -16,24 +16,28 @@ import java.util.List;
 
     /**
      * 获取当前数据列表
+     *
      * @return
      */
     List<T> getData();
 
     /**
      * 添加一条数据
+     *
      * @param item
      */
     void add(@NonNull T item);
 
     /**
      * 添加多条数据
+     *
      * @param list
      */
     void addAll(@NonNull List<T> list);
 
     /**
      * 更新一条数据
+     *
      * @param oldItem
      * @param newItem
      */
@@ -41,6 +45,7 @@ import java.util.List;
 
     /**
      * 根据下标更新一条数据
+     *
      * @param index
      * @param item
      */
@@ -48,24 +53,28 @@ import java.util.List;
 
     /**
      * 删除一条数据
+     *
      * @param item
      */
     void remove(@NonNull T item);
 
     /**
      * 根据下标删除一条数据
+     *
      * @param index
      */
     void remove(int index);
 
     /**
      * 替换所有数据
+     *
      * @param item
      */
     void replaceAll(@NonNull List<T> item);
 
     /**
      * 是否存在某个对象
+     *
      * @param item
      * @return
      */

@@ -33,6 +33,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.annotation.StringRes;
+import android.support.v4.text.util.LinkifyCompat;
 import android.text.util.Linkify;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
@@ -110,6 +111,11 @@ import com.classic.adapter.interfaces.ImageLoad;
         return existingHelper;
     }
 
+    /** Retrieve the mConvertView */
+    public View getView() {
+        return mConvertView;
+    }
+
     /**
      * This method allows you to retrieve a view and perform custom
      * operations on it, not covered by the BaseAdapterHelper.
@@ -122,10 +128,33 @@ import com.classic.adapter.interfaces.ImageLoad;
         return retrieveView(viewId);
     }
 
+    /**
+     * Retrieve the overall mPosition of the mData in the list.
+     *
+     * @throws IllegalArgumentException If the mPosition hasn't been set at the construction of the
+     * this helper.
+     */
+    public int getPosition() {
+        if (mPosition == -1) {
+            throw new IllegalStateException("Use BaseAdapterHelper constructor " +
+                                            "with mPosition if you need to retrieve the mPosition.");
+        }
+        return mPosition;
+    }
+
+    /** Retrieves the last converted object on this view. */
+    public Object getAssociatedObject() {
+        return mAssociatedObject;
+    }
+
+    /** Should be called during convert */
+    public void setAssociatedObject(Object associatedObject) {
+        this.mAssociatedObject = associatedObject;
+    }
+
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     public BaseAdapterHelper setBackground(@IdRes int viewId, @NonNull Drawable drawable) {
-        View view = retrieveView(viewId);
-        view.setBackground(drawable);
+        retrieveView(viewId).setBackground(drawable);
         return this;
     }
 
@@ -137,8 +166,7 @@ import com.classic.adapter.interfaces.ImageLoad;
      * @return The BaseAdapterHelper for chaining.
      */
     public BaseAdapterHelper setBackgroundColor(@IdRes int viewId, @ColorInt int color) {
-        View view = retrieveView(viewId);
-        view.setBackgroundColor(color);
+        retrieveView(viewId).setBackgroundColor(color);
         return this;
     }
 
@@ -150,8 +178,7 @@ import com.classic.adapter.interfaces.ImageLoad;
      * @return The BaseAdapterHelper for chaining.
      */
     public BaseAdapterHelper setBackgroundRes(@IdRes int viewId, @DrawableRes int backgroundRes) {
-        View view = retrieveView(viewId);
-        view.setBackgroundResource(backgroundRes);
+        retrieveView(viewId).setBackgroundResource(backgroundRes);
         return this;
     }
 
@@ -163,14 +190,12 @@ import com.classic.adapter.interfaces.ImageLoad;
      * @return The BaseAdapterHelper for chaining.
      */
     public BaseAdapterHelper setText(@IdRes int viewId, CharSequence value) {
-        TextView view = retrieveView(viewId);
-        view.setText(value);
+        ((TextView)retrieveView(viewId)).setText(value);
         return this;
     }
 
     public BaseAdapterHelper setTextRes(@IdRes int viewId, @StringRes int resId) {
-        TextView view = retrieveView(viewId);
-        view.setText(resId);
+        ((TextView)retrieveView(viewId)).setText(resId);
         return this;
     }
 
@@ -182,8 +207,7 @@ import com.classic.adapter.interfaces.ImageLoad;
      * @return The BaseAdapterHelper for chaining.
      */
     public BaseAdapterHelper setTextColor(@IdRes int viewId, @ColorInt int textColor) {
-        TextView view = retrieveView(viewId);
-        view.setTextColor(textColor);
+        ((TextView)retrieveView(viewId)).setTextColor(textColor);
         return this;
     }
 
@@ -195,8 +219,8 @@ import com.classic.adapter.interfaces.ImageLoad;
      * @return The BaseAdapterHelper for chaining.
      */
     public BaseAdapterHelper setTextColorRes(@IdRes int viewId, @ColorRes int textColorRes) {
-        TextView view = retrieveView(viewId);
-        view.setTextColor(mContext.getResources().getColor(textColorRes));
+        //noinspection deprecation
+        ((TextView)retrieveView(viewId)).setTextColor(mContext.getResources().getColor(textColorRes));
         return this;
     }
 
@@ -211,15 +235,13 @@ import com.classic.adapter.interfaces.ImageLoad;
      */
     @TargetApi(Build.VERSION_CODES.M) public BaseAdapterHelper setTextColorRes(
             @IdRes int viewId, @ColorRes int textColorRes, @Nullable Resources.Theme theme) {
-        TextView view = retrieveView(viewId);
-        view.setTextColor(mContext.getResources().getColor(textColorRes, theme));
+        ((TextView)retrieveView(viewId)).setTextColor(mContext.getResources().getColor(textColorRes, theme));
         return this;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     public BaseAdapterHelper setImageIcon(@IdRes int viewId, @NonNull Icon icon) {
-        ImageView view = retrieveView(viewId);
-        view.setImageIcon(icon);
+        ((ImageView)retrieveView(viewId)).setImageIcon(icon);
         return this;
     }
 
@@ -231,8 +253,7 @@ import com.classic.adapter.interfaces.ImageLoad;
      * @return The BaseAdapterHelper for chaining.
      */
     public BaseAdapterHelper setImageResource(@IdRes int viewId, @DrawableRes int imageResId) {
-        ImageView view = retrieveView(viewId);
-        view.setImageResource(imageResId);
+        ((ImageView)retrieveView(viewId)).setImageResource(imageResId);
         return this;
     }
 
@@ -244,8 +265,7 @@ import com.classic.adapter.interfaces.ImageLoad;
      * @return The BaseAdapterHelper for chaining.
      */
     public BaseAdapterHelper setImageDrawable(@IdRes int viewId, @NonNull Drawable drawable) {
-        ImageView view = retrieveView(viewId);
-        view.setImageDrawable(drawable);
+        ((ImageView)retrieveView(viewId)).setImageDrawable(drawable);
         return this;
     }
 
@@ -257,8 +277,8 @@ import com.classic.adapter.interfaces.ImageLoad;
      * @return The BaseAdapterHelper for chaining.
      */
     public BaseAdapterHelper setImageUrl(@IdRes int viewId, @NonNull String imageUrl) {
-        ImageView view = retrieveView(viewId);
         if (null != this.mImageLoad) {
+            ImageView view = retrieveView(viewId);
             this.mImageLoad.load(mContext, view, imageUrl);
         }
         return this;
@@ -272,8 +292,7 @@ import com.classic.adapter.interfaces.ImageLoad;
 
     /** Add an action to set the image of an image view. Can be called multiple times. */
     public BaseAdapterHelper setImageBitmap(@IdRes int viewId, @NonNull Bitmap bitmap) {
-        ImageView view = retrieveView(viewId);
-        view.setImageBitmap(bitmap);
+        ((ImageView)retrieveView(viewId)).setImageBitmap(bitmap);
         return this;
     }
 
@@ -281,8 +300,7 @@ import com.classic.adapter.interfaces.ImageLoad;
      * Add an action to set the alpha of a view. Can be called multiple times.
      * Alpha between 0-1.
      */
-    public BaseAdapterHelper setAlpha(
-            @IdRes int viewId, @FloatRange(from = 0.0, to = 1.0) float value) {
+    public BaseAdapterHelper setAlpha(@IdRes int viewId, @FloatRange(from = 0.0, to = 1.0) float value) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             retrieveView(viewId).setAlpha(value);
         } else {
@@ -303,45 +321,38 @@ import com.classic.adapter.interfaces.ImageLoad;
      * @return The BaseAdapterHelper for chaining.
      */
     public BaseAdapterHelper setVisible(@IdRes int viewId, boolean visible) {
-        View view = retrieveView(viewId);
-        view.setVisibility(visible ? View.VISIBLE : View.GONE);
+        retrieveView(viewId).setVisibility(visible ? View.VISIBLE : View.GONE);
         return this;
     }
 
     public BaseAdapterHelper setVisible(@IdRes int viewId, int visibility) {
-        View view = retrieveView(viewId);
-        view.setVisibility(visibility);
+        retrieveView(viewId).setVisibility(visibility);
         return this;
     }
 
     public BaseAdapterHelper setEnabled(@IdRes int viewId, boolean enabled) {
-        View view = retrieveView(viewId);
-        view.setEnabled(enabled);
+        retrieveView(viewId).setEnabled(enabled);
         return this;
     }
 
     public BaseAdapterHelper setFocusable(@IdRes int viewId, boolean focusable) {
-        View view = retrieveView(viewId);
-        view.setFocusable(focusable);
+        retrieveView(viewId).setFocusable(focusable);
         return this;
     }
 
-    public BaseAdapterHelper setFocusableInTouchMode(
-            @IdRes int viewId, boolean focusableInTouchMode) {
-        View view = retrieveView(viewId);
-        view.setFocusableInTouchMode(focusableInTouchMode);
+    public BaseAdapterHelper setFocusableInTouchMode(@IdRes int viewId, boolean focusableInTouchMode) {
+        retrieveView(viewId).setFocusableInTouchMode(focusableInTouchMode);
         return this;
     }
 
     /**
-     * Add links into a TextView.
+     * Add All links into a TextView.
      *
      * @param viewId The id of the TextView to linkify.
      * @return The BaseAdapterHelper for chaining.
      */
-    public BaseAdapterHelper linkify(@IdRes int viewId) {
-        TextView view = retrieveView(viewId);
-        Linkify.addLinks(view, Linkify.ALL);
+    public BaseAdapterHelper addAllLinks(@IdRes int viewId) {
+        addLinks(viewId, Linkify.ALL);
         return this;
     }
 
@@ -352,7 +363,7 @@ import com.classic.adapter.interfaces.ImageLoad;
      * @return The BaseAdapterHelper for chaining.
      * @see android.text.util.Linkify#addLinks(TextView text, int mask)
      */
-    public BaseAdapterHelper addLinks(@IdRes int viewId, int mask) {
+    public BaseAdapterHelper addLinks(@IdRes int viewId, @LinkifyCompat.LinkifyMask int mask) {
         TextView view = retrieveView(viewId);
         Linkify.addLinks(view, mask);
         return this;
@@ -384,8 +395,7 @@ import com.classic.adapter.interfaces.ImageLoad;
      * @return The BaseAdapterHelper for chaining.
      */
     public BaseAdapterHelper setProgress(@IdRes int viewId, int progress) {
-        ProgressBar view = retrieveView(viewId);
-        view.setProgress(progress);
+        ((ProgressBar)retrieveView(viewId)).setProgress(progress);
         return this;
     }
 
@@ -412,8 +422,7 @@ import com.classic.adapter.interfaces.ImageLoad;
      * @return The BaseAdapterHelper for chaining.
      */
     public BaseAdapterHelper setMax(@IdRes int viewId, int max) {
-        ProgressBar view = retrieveView(viewId);
-        view.setMax(max);
+        ((ProgressBar)retrieveView(viewId)).setMax(max);
         return this;
     }
 
@@ -425,8 +434,7 @@ import com.classic.adapter.interfaces.ImageLoad;
      * @return The BaseAdapterHelper for chaining.
      */
     public BaseAdapterHelper setRating(@IdRes int viewId, float rating) {
-        RatingBar view = retrieveView(viewId);
-        view.setRating(rating);
+        ((RatingBar)retrieveView(viewId)).setRating(rating);
         return this;
     }
 
@@ -446,90 +454,6 @@ import com.classic.adapter.interfaces.ImageLoad;
     }
 
     /**
-     * Sets the on click listener of the view.
-     *
-     * @param viewId The view id.
-     * @param listener The on click listener;
-     * @return The BaseAdapterHelper for chaining.
-     */
-    public BaseAdapterHelper setOnClickListener(
-            @IdRes int viewId, @NonNull View.OnClickListener listener) {
-        View view = retrieveView(viewId);
-        view.setOnClickListener(listener);
-        return this;
-    }
-
-    /**
-     * Sets the on touch listener of the view.
-     *
-     * @param viewId The view id.
-     * @param listener The on touch listener;
-     * @return The BaseAdapterHelper for chaining.
-     */
-    public BaseAdapterHelper setOnTouchListener(
-            @IdRes int viewId, @NonNull View.OnTouchListener listener) {
-        View view = retrieveView(viewId);
-        view.setOnTouchListener(listener);
-        return this;
-    }
-
-    /**
-     * Sets the on long click listener of the view.
-     *
-     * @param viewId The view id.
-     * @param listener The on long click listener;
-     * @return The BaseAdapterHelper for chaining.
-     */
-    public BaseAdapterHelper setOnLongClickListener(
-            @IdRes int viewId, @NonNull View.OnLongClickListener listener) {
-        View view = retrieveView(viewId);
-        view.setOnLongClickListener(listener);
-        return this;
-    }
-
-    /**
-     * Sets the listview or gridview's item click listener of the view
-     *
-     * @param viewId The view id.
-     * @param listener The item on click listener;
-     * @return The BaseAdapterHelper for chaining.
-     */
-    public BaseAdapterHelper setOnItemClickListener(
-            @IdRes int viewId, @NonNull AdapterView.OnItemClickListener listener) {
-        AdapterView view = retrieveView(viewId);
-        view.setOnItemClickListener(listener);
-        return this;
-    }
-
-    /**
-     * Sets the listview or gridview's item long click listener of the view
-     *
-     * @param viewId The view id.
-     * @param listener The item long click listener;
-     * @return The BaseAdapterHelper for chaining.
-     */
-    public BaseAdapterHelper setOnItemLongClickListener(
-            @IdRes int viewId, @NonNull AdapterView.OnItemLongClickListener listener) {
-        AdapterView view = retrieveView(viewId);
-        view.setOnItemLongClickListener(listener);
-        return this;
-    }
-
-    /**
-     * Sets the listview or gridview's item selected click listener of the view
-     *
-     * @param viewId The view id.
-     * @param listener The item selected click listener;
-     * @return The BaseAdapterHelper for chaining.
-     */
-    public BaseAdapterHelper setOnItemSelectedClickListener(
-            @IdRes int viewId, @NonNull AdapterView.OnItemSelectedListener listener) {
-        AdapterView view = retrieveView(viewId);
-        view.setOnItemSelectedListener(listener);
-        return this;
-    }
-
-    /**
      * Sets the tag of the view.
      *
      * @param viewId The view id.
@@ -537,8 +461,7 @@ import com.classic.adapter.interfaces.ImageLoad;
      * @return The BaseAdapterHelper for chaining.
      */
     public BaseAdapterHelper setTag(@IdRes int viewId, @NonNull Object tag) {
-        View view = retrieveView(viewId);
-        view.setTag(tag);
+        retrieveView(viewId).setTag(tag);
         return this;
     }
 
@@ -551,8 +474,7 @@ import com.classic.adapter.interfaces.ImageLoad;
      * @return The BaseAdapterHelper for chaining.
      */
     public BaseAdapterHelper setTag(@IdRes int viewId, int key, @NonNull Object tag) {
-        View view = retrieveView(viewId);
-        view.setTag(key, tag);
+        retrieveView(viewId).setTag(key, tag);
         return this;
     }
 
@@ -580,33 +502,87 @@ import com.classic.adapter.interfaces.ImageLoad;
      * @param adapter The adapter;
      * @return The BaseAdapterHelper for chaining.
      */
-    @SuppressWarnings("unchecked") public BaseAdapterHelper setAdapter(
-            @IdRes int viewId, @NonNull Adapter adapter) {
-        AdapterView view = retrieveView(viewId);
-        view.setAdapter(adapter);
+    @SuppressWarnings("unchecked") public BaseAdapterHelper setAdapter(@IdRes int viewId, @NonNull Adapter adapter) {
+        ((AdapterView)retrieveView(viewId)).setAdapter(adapter);
         return this;
     }
 
-    /** Retrieve the mConvertView */
-    public View getView() {
-        return mConvertView;
+    /**
+     * Sets the on click listener of the view.
+     *
+     * @param viewId The view id.
+     * @param listener The on click listener;
+     * @return The BaseAdapterHelper for chaining.
+     */
+    public BaseAdapterHelper setOnClickListener(@IdRes int viewId, @NonNull View.OnClickListener listener) {
+        retrieveView(viewId).setOnClickListener(listener);
+        return this;
     }
 
     /**
-     * Retrieve the overall mPosition of the mData in the list.
+     * Sets the on touch listener of the view.
      *
-     * @throws IllegalArgumentException If the mPosition hasn't been set at the construction of the
-     * this helper.
+     * @param viewId The view id.
+     * @param listener The on touch listener;
+     * @return The BaseAdapterHelper for chaining.
      */
-    public int getPosition() {
-        if (mPosition == -1) {
-            throw new IllegalStateException("Use BaseAdapterHelper constructor " +
-                                            "with mPosition if you need to retrieve the mPosition.");
-        }
-        return mPosition;
+    public BaseAdapterHelper setOnTouchListener(@IdRes int viewId, @NonNull View.OnTouchListener listener) {
+        retrieveView(viewId).setOnTouchListener(listener);
+        return this;
     }
 
-    @SuppressWarnings("unchecked") protected <T extends View> T retrieveView(@IdRes int viewId) {
+    /**
+     * Sets the on long click listener of the view.
+     *
+     * @param viewId The view id.
+     * @param listener The on long click listener;
+     * @return The BaseAdapterHelper for chaining.
+     */
+    public BaseAdapterHelper setOnLongClickListener(@IdRes int viewId, @NonNull View.OnLongClickListener listener) {
+        retrieveView(viewId).setOnLongClickListener(listener);
+        return this;
+    }
+
+    /**
+     * Sets the listview or gridview's item click listener of the view
+     *
+     * @param viewId The view id.
+     * @param listener The item on click listener;
+     * @return The BaseAdapterHelper for chaining.
+     */
+    public BaseAdapterHelper setOnItemClickListener(@IdRes int viewId,
+                                                    @NonNull AdapterView.OnItemClickListener listener) {
+        ((AdapterView)retrieveView(viewId)).setOnItemClickListener(listener);
+        return this;
+    }
+
+    /**
+     * Sets the listview or gridview's item long click listener of the view
+     *
+     * @param viewId The view id.
+     * @param listener The item long click listener;
+     * @return The BaseAdapterHelper for chaining.
+     */
+    public BaseAdapterHelper setOnItemLongClickListener(@IdRes int viewId,
+                                                        @NonNull AdapterView.OnItemLongClickListener listener) {
+        ((AdapterView)retrieveView(viewId)).setOnItemLongClickListener(listener);
+        return this;
+    }
+
+    /**
+     * Sets the listview or gridview's item selected click listener of the view
+     *
+     * @param viewId The view id.
+     * @param listener The item selected click listener;
+     * @return The BaseAdapterHelper for chaining.
+     */
+    public BaseAdapterHelper setOnItemSelectedClickListener(@IdRes int viewId,
+                                                            @NonNull AdapterView.OnItemSelectedListener listener) {
+        ((AdapterView)retrieveView(viewId)).setOnItemSelectedListener(listener);
+        return this;
+    }
+
+    @SuppressWarnings("unchecked") private <T extends View> T retrieveView(@IdRes int viewId) {
         View view = mViews.get(viewId);
         if (view == null) {
             view = mConvertView.findViewById(viewId);
@@ -615,13 +591,4 @@ import com.classic.adapter.interfaces.ImageLoad;
         return (T) view;
     }
 
-    /** Retrieves the last converted object on this view. */
-    public Object getAssociatedObject() {
-        return mAssociatedObject;
-    }
-
-    /** Should be called during convert */
-    public void setAssociatedObject(Object associatedObject) {
-        this.mAssociatedObject = associatedObject;
-    }
 }

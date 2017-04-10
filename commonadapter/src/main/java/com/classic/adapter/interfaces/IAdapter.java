@@ -14,6 +14,7 @@ public interface IAdapter<T> {
 
     /**
      * 数据更新回调
+     *
      * @param helper
      * @param item
      * @param position
@@ -22,6 +23,7 @@ public interface IAdapter<T> {
 
     /**
      * 当前Item的布局文件
+     *
      * @param item
      * @param position
      * @return

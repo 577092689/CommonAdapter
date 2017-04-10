@@ -27,7 +27,7 @@ import static com.classic.adapter.BaseAdapterHelper.get;
  * 创建时间: 2016/1/27 17:50.
  */
 @SuppressWarnings({ "WeakerAccess", "unused" }) public abstract class CommonRecyclerAdapter<T>
-        extends RecyclerView.Adapter implements IAdapter<T>, IData<T> {
+        extends RecyclerView.Adapter<CommonRecyclerAdapter.RecyclerViewHolder> implements IAdapter<T>, IData<T> {
 
     private final Context mContext;
     private final int     mLayoutResId;
@@ -46,22 +46,21 @@ import static com.classic.adapter.BaseAdapterHelper.get;
         this.mLayoutResId = layoutResId;
     }
 
-    @Override public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    @Override public RecyclerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         final BaseAdapterHelper helper = get(mContext, null, parent, viewType, -1);
-        return new RecyclerViewHolder(helper.getView(), helper);
+        return new RecyclerViewHolder(helper);
     }
 
-    @SuppressWarnings("unchecked") @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        BaseAdapterHelper helper = ((RecyclerViewHolder) holder).mAdapterHelper;
+    @Override public void onBindViewHolder(CommonRecyclerAdapter.RecyclerViewHolder holder, int position) {
+        BaseAdapterHelper helper = holder.mAdapterHelper;
         helper.setAssociatedObject(getItem(position));
         onUpdate(helper, getItem(position), position);
     }
 
-    @SuppressWarnings("unchecked") @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position, List payloads) {
+    @Override public void onBindViewHolder(CommonRecyclerAdapter.RecyclerViewHolder holder, int position,
+                                           List<Object> payloads) {
         if (null != payloads && payloads.size() > 0) {
-            BaseAdapterHelper helper = ((RecyclerViewHolder) holder).mAdapterHelper;
+            BaseAdapterHelper helper = holder.mAdapterHelper;
             helper.setAssociatedObject(getItem(position));
             onItemContentChanged(helper, payloads);
         } else {
@@ -153,13 +152,10 @@ import static com.classic.adapter.BaseAdapterHelper.get;
      * @param helper
      * @param payloads
      */
-    public void onItemContentChanged(@NonNull BaseAdapterHelper helper,
-                                     @NonNull List<Object> payloads) {
-
-    }
+    public void onItemContentChanged(@NonNull BaseAdapterHelper helper, @NonNull List<Object> payloads) { }
 
     public T getItem(int position) {
-        return position >= mData.size() ? null : mData.get(position);
+        return position < 0 || position >= mData.size() ? null : mData.get(position);
     }
 
     public void setOnItemClickListener(OnItemClickListener itemClickListener) {
@@ -178,31 +174,27 @@ import static com.classic.adapter.BaseAdapterHelper.get;
         void onItemLongClick(RecyclerView.ViewHolder viewHolder, View view, int position);
     }
 
-    private final class RecyclerViewHolder extends RecyclerView.ViewHolder {
+    protected final class RecyclerViewHolder extends RecyclerView.ViewHolder {
         BaseAdapterHelper mAdapterHelper;
-
-        public RecyclerViewHolder(View itemView, BaseAdapterHelper adapterHelper) {
-            super(itemView);
+        public RecyclerViewHolder(BaseAdapterHelper adapterHelper) {
+            super(adapterHelper.getView());
             this.mAdapterHelper = adapterHelper;
+            if (null != mItemClickListener) {
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override public void onClick(View v) {
+                        mItemClickListener.onItemClick(RecyclerViewHolder.this, v, getAdapterPosition());
 
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override public void onClick(View v) {
-                    if (null != mItemClickListener) {
-                        mItemClickListener.onItemClick(RecyclerViewHolder.this, v,
-                                getAdapterPosition());
                     }
-                }
-            });
-            itemView.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override public boolean onLongClick(View v) {
-                    if (null != mItemLongClickListener) {
-                        mItemLongClickListener.onItemLongClick(RecyclerViewHolder.this, v,
-                                getAdapterPosition());
+                });
+            }
+            if (null != mItemLongClickListener) {
+                itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override public boolean onLongClick(View v) {
+                        mItemLongClickListener.onItemLongClick(RecyclerViewHolder.this, v, getAdapterPosition());
                         return true;
                     }
-                    return false;
-                }
-            });
+                });
+            }
         }
     }
 

@@ -18,7 +18,7 @@
 dependencies {
     compile 'com.classic.adapter:commonadapter:1.6'
     //项目中使用到RecyclerView,需要添加依赖
-    compile 'com.android.support:recyclerview-v7:25.3.0'
+    compile 'com.android.support:recyclerview-v7:25.3.1'
 }
 ```
 
@@ -169,8 +169,7 @@ commonRecyclerAdapter.setOnItemClickListener(new CommonRecyclerAdapter.OnItemCli
     }
 });
 commonRecyclerAdapter.setOnItemLongClickListener(new CommonRecyclerAdapter.OnItemLongClickListener() {
-    @Override public void onItemLongClick(RecyclerView.ViewHolder viewHolder, View view,
-        int position) {
+    @Override public void onItemLongClick(RecyclerView.ViewHolder viewHolder, View view, int position) {
         // TODO ...
     }
 });
@@ -191,35 +190,37 @@ helper.setText(R.id.viewId, text)
       .setBackgroundColor(R.id.viewId, R.color.colorResId)
       .setBackgroundRes(R.id.viewId, R.drawable.drawableResId)
       .setChecked(R.id.viewId, true)
-      .setImageBitmap(R.id.viewId,bitmap)
-      .setImageDrawable(R.id.viewId,drawable)
+      .setImageBitmap(R.id.viewId, bitmap)
+      .setImageDrawable(R.id.viewId, drawable)
       .setImageResource(R.id.viewId, R.drawable.drawableResId)
       .setImageUrl(R.id.viewId, url)
-      .setProgress(R.id.viewId,progress)
-      .setProgress(R.id.viewId,progress,max)
+      .setProgress(R.id.viewId, progress)
+      .setProgress(R.id.viewId, progress, max)
       .setRating(R.id.viewId, rating)
       .setRating(R.id.viewId, rating, max)
       .setTextColor(R.id.viewId, R.color.colorResId)
       .setTextColorRes(R.id.viewId, R.color.colorResId)
-      .setTextColorRes(R.id.viewId, R.color.colorResId, theme) //New in version 1.2
+      .setTextColorRes(R.id.viewId, R.color.colorResId, theme)
       //TextView添加超链接，更多属性参考：android.text.util.Linkify#addLinks(TextView text, int mask)
-      .addLinks(R.id.viewId, , Linkify.ALL) //New in version 1.2
+      .addLinks(R.id.viewId, Linkify.ALL)
+      //效果同上
+      .addAllLinks(R.id.viewId)
       //单个TextView设置Typeface
       .setTypeface(R.id.viewId, typeface)
       //多个TextView设置Typeface
-      .setTypeface(typeface, R.id.xxx1, R.id.xxx2,R.id.xxx3, ...)
+      .setTypeface(typeface, R.id.xxx1, R.id.xxx2, R.id.xxx3, ...)
       .setVisible(R.id.viewId, View.VISIBLE)
       //ProgressBar设置Max
       .setMax(R.id.viewId, max)
       //ListView设置adapter
       .setAdapter(R.id.viewId, adapter)
       //下面为View常用点击事件设置
-      .setOnTouchListener(R.id.viewId, View.OnTouchListener)
-      .setOnClickListener(R.id.viewId, View.OnClickListener)
-      .setOnLongClickListener(R.id.viewId, View.OnLongClickListener)
-      .setOnItemClickListener(R.id.viewId, AdapterView.OnItemClickListener)
-      .setOnItemLongClickListener(R.id.viewId, AdapterView.OnItemLongClickListener)
-      .setOnItemSelectedClickListener(R.id.viewId, AdapterView.OnItemSelectedListener);
+      .setOnTouchListener(R.id.viewId, onTouchListener)
+      .setOnClickListener(R.id.viewId, onClickListener)
+      .setOnLongClickListener(R.id.viewId, onLongClickListener)
+      .setOnItemClickListener(R.id.viewId, onItemClickListener)
+      .setOnItemLongClickListener(R.id.viewId, onItemLongClickListener)
+      .setOnItemSelectedClickListener(R.id.viewId, onItemSelectedListener);
 
 //获取item的convertView
 View convertView = helper.getView();
@@ -260,7 +261,7 @@ public class YourXXX implements ImageLoad {
 
         or
 
-        fresco
+        Fresco
         Android-Universal-Image-Loader
         自定义
         ...

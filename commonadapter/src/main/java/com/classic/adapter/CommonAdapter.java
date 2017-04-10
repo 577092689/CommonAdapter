@@ -47,7 +47,7 @@ import static com.classic.adapter.BaseAdapterHelper.get;
     }
 
     @Override public T getItem(int position) {
-        return position >= mData.size() ? null : mData.get(position);
+        return position < 0 || position >= mData.size() ? null : mData.get(position);
     }
 
     @Override public long getItemId(int position) {
