@@ -27,4 +27,9 @@
         android:orderInCategory="1"
         app:showAsAction="never"/>
 
+    <item android:id="@+id/clear"
+          android:title="Clear"
+          android:orderInCategory="1"
+          app:showAsAction="never"/>
+
 </menu>

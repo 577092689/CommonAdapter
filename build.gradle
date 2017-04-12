@@ -5,7 +5,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.0'
+        classpath 'com.android.tools.build:gradle:2.3.1'
 //        classpath 'com.github.dcendents:android-maven-gradle-plugin:1.5'
 //        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
     }
@@ -29,7 +29,7 @@ ext {
     projectDesc = 'android common adapter'
     projectGroup = 'com.classic.adapter'
     projectArtifactId = 'commonadapter'
-    projectVersion = '1.6'
+    projectVersion = '1.7'
 
     orgName = 'xxjd'
     repoName = 'maven'

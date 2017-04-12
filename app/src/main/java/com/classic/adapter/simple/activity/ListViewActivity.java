@@ -47,6 +47,10 @@ public class ListViewActivity extends DemoActivity {
         mAdapter.replaceAll(NewsDataSource.getReplaceList());
     }
 
+    @Override protected void testClear() {
+        mAdapter.clear();
+    }
+
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mToolbar.setTitle(R.string.main_listview_lable);

@@ -26,6 +26,7 @@ public abstract class DemoActivity extends AppCompatActivity implements
     protected abstract void testSetByIndex();
     protected abstract void testRemoveByIndex();
     protected abstract void testReplaceAll();
+    protected abstract void testClear();
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,6 +75,9 @@ public abstract class DemoActivity extends AppCompatActivity implements
                 break;
             case R.id.replace_all:
                 testReplaceAll();
+                break;
+            case R.id.clear:
+                testClear();
                 break;
             default:
                 return false;

@@ -115,6 +115,10 @@ public class RecyclerViewSimpleActivity extends DemoActivity
         }).start();
     }
 
+    @Override protected void testClear() {
+        mNewsAdapter.clear();
+    }
+
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mToolbar.setTitle(R.string.main_recyclerview_simple_lable);

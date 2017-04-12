@@ -16,7 +16,7 @@
 
 ```gradle
 dependencies {
-    compile 'com.classic.adapter:commonadapter:1.6'
+    compile 'com.classic.adapter:commonadapter:1.7'
     //项目中使用到RecyclerView,需要添加依赖
     compile 'com.android.support:recyclerview-v7:25.3.1'
 }
@@ -230,7 +230,7 @@ View childView = helper.getView(R.id.viewId);
 
 ```
 
-配置全局图片加载的实现类 (v1.4新增)
+配置全局图片加载的实现类
 ```java
 public class YourApplication extends Application {
 
