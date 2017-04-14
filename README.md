@@ -23,8 +23,10 @@ dependencies {
 ```
 
 ## v1.8 更新日志
-    1. 修改 `CommonRecyclerAdapter` 的 `OnItemLongClickListener` 回调事件返回值为 `boolean`.
-    2. `CommonRecyclerAdapter` 添加 `addChildViewListener(viewId, listener)` 方法, 支持：`OnChildViewClickListener` 、 `OnChildViewLongClickListener` 、 `OnChildViewTouchListener`.
+
+1. 修改 `CommonRecyclerAdapter` 的 `OnItemLongClickListener` 回调事件返回值为 `boolean`.
+2. `CommonRecyclerAdapter` 添加 `addChildViewListener(viewId, listener)` 方法, 支持：`OnChildViewClickListener` 、 `OnChildViewLongClickListener` 、 `OnChildViewTouchListener`.
+
 
 ## 开始使用
 
