@@ -139,9 +139,10 @@ public class RecyclerViewSimpleActivity extends DemoActivity
     }
 
     @Override
-    public void onItemLongClick(RecyclerView.ViewHolder viewHolder, View view, int position) {
+    public boolean onItemLongClick(RecyclerView.ViewHolder viewHolder, View view, int position) {
         Toast.makeText(RecyclerViewSimpleActivity.this,
                 "RecyclerView onItemLongClick,position:" + position, Toast.LENGTH_SHORT).show();
+        return true;
     }
 
     private class NewsAdapter extends CommonRecyclerAdapter<News> {

@@ -107,20 +107,37 @@ public class RecyclerViewActivity extends DemoActivity
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mNewsAdapter = new NewsAdapter(this, R.layout.item_none_picture,
                 NewsDataSource.getNewsList());
-        mNewsAdapter.setOnItemClickListener(this);
-        mNewsAdapter.setOnItemLongClickListener(this);
         mRecyclerView.setAdapter(mNewsAdapter);
+
+        mNewsAdapter.setOnItemClickListener(this)
+                    .setOnItemLongClickListener(this)
+                    // 设置Child view点击事件(方式一)
+                    .addChildViewListener(R.id.item_single_picture_cover,
+                                          new com.classic.adapter.CommonRecyclerAdapter.OnChildViewClickListener() {
+                                              @Override public void onItemClick(View view, int position) {
+                                                  showToast("OnChildViewClickListener:" + position);
+                                              }
+                                          })
+                    .addChildViewListener(R.id.item_multiple_picture_cover_left,
+                                          new CommonRecyclerAdapter.OnChildViewLongClickListener() {
+                                              @Override public boolean onItemLongClick(View view, int position) {
+                                                  showToast("OnChildViewLongClickListener:" + position);
+                                                  return true;
+                                              }
+                                          });
+
+
+
     }
 
     @Override public void onItemClick(RecyclerView.ViewHolder viewHolder, View view, int position) {
-        Toast.makeText(RecyclerViewActivity.this, "RecyclerView onItemClick,position:" + position,
-                Toast.LENGTH_SHORT).show();
+        showToast("RecyclerView onItemClick:" + position);
     }
 
     @Override
-    public void onItemLongClick(RecyclerView.ViewHolder viewHolder, View view, int position) {
-        Toast.makeText(RecyclerViewActivity.this,
-                "RecyclerView onItemLongClick,position:" + position, Toast.LENGTH_SHORT).show();
+    public boolean onItemLongClick(RecyclerView.ViewHolder viewHolder, View view, int position) {
+        showToast("RecyclerView onItemLongClick:" + position);
+        return true;
     }
 
     private class NewsAdapter extends CommonRecyclerAdapter<News> {
@@ -164,33 +181,39 @@ public class RecyclerViewActivity extends DemoActivity
                                           item.getAuthor()))
                           .setText(R.id.item_single_picture_date,
                                   Consts.DATE_FORMAT.format(new Date(item.getReleaseTime())))
-                          .setImageUrl(R.id.item_single_picture_cover, item.getCoverUrl())
-                          .setOnClickListener(R.id.item_single_picture_cover, new View.OnClickListener() {
-                              @Override public void onClick(View v) {
-                                  Toast.makeText(v.getContext(), position + "," + item.getTitle(), Toast.LENGTH_SHORT)
-                                       .show();
-                              }
-                          });
+                          .setImageUrl(R.id.item_single_picture_cover, item.getCoverUrl());
+                          // 设置Child view点击事件(方式二)
+                          // .setOnClickListener(R.id.item_single_picture_cover, new View.OnClickListener() {
+                          //     @Override public void onClick(View v) {
+                          //         Toast.makeText(v.getContext(), position + "," + item.getTitle(), Toast.LENGTH_SHORT)
+                          //              .show();
+                          //     }
+                          // });
                     break;
                 case News.TYPE_MULTIPLE_PICTURE:
                     String[] urls = item.getCoverUrl().split(Consts.URL_SEPARATOR);
                     helper.setText(R.id.item_multiple_picture_intro, item.getIntro())
                           .setImageUrl(R.id.item_multiple_picture_cover_left, urls[0])
-                          .setImageUrl(R.id.item_multiple_picture_cover_right, urls[1])
-                          .setOnClickListener(R.id.item_multiple_picture_cover_left, new View.OnClickListener() {
-                              @Override public void onClick(View v) {
-                                  Toast.makeText(v.getContext(), "left:" + position + "," + item.getTitle(),
-                                                 Toast.LENGTH_SHORT).show();
-                              }
-                          })
-                          .setOnClickListener(R.id.item_multiple_picture_cover_right, new View.OnClickListener() {
-                              @Override public void onClick(View v) {
-                                  Toast.makeText(v.getContext(), "right:" + position + "," + item.getTitle(),
-                                                 Toast.LENGTH_SHORT).show();
-                              }
-                          });
+                          .setImageUrl(R.id.item_multiple_picture_cover_right, urls[1]);
+                          // 设置Child view点击事件(方式二)
+                          // .setOnClickListener(R.id.item_multiple_picture_cover_left, new View.OnClickListener() {
+                          //     @Override public void onClick(View v) {
+                          //         Toast.makeText(v.getContext(), "left:" + position + "," + item.getTitle(),
+                          //                        Toast.LENGTH_SHORT).show();
+                          //     }
+                          // })
+                          // .setOnClickListener(R.id.item_multiple_picture_cover_right, new View.OnClickListener() {
+                          //     @Override public void onClick(View v) {
+                          //         Toast.makeText(v.getContext(), "right:" + position + "," + item.getTitle(),
+                          //                        Toast.LENGTH_SHORT).show();
+                          //     }
+                          // });
                     break;
             }
         }
+    }
+
+    private void showToast(String content) {
+        Toast.makeText(RecyclerViewActivity.this, content, Toast.LENGTH_SHORT).show();
     }
 }

@@ -1,11 +1,13 @@
 package com.classic.adapter;
 
 import android.content.Context;
+import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -15,6 +17,7 @@ import com.classic.adapter.interfaces.IScrollHideListener;
 
 import java.util.ArrayList;
 import java.util.List;
+
 
 import static com.classic.adapter.BaseAdapterHelper.get;
 
@@ -26,15 +29,17 @@ import static com.classic.adapter.BaseAdapterHelper.get;
  * 创 建 人: 续写经典
  * 创建时间: 2016/1/27 17:50.
  */
-@SuppressWarnings({ "WeakerAccess", "unused" }) public abstract class CommonRecyclerAdapter<T>
+@SuppressWarnings({"WeakerAccess", "unused"}) public abstract class CommonRecyclerAdapter<T>
         extends RecyclerView.Adapter<CommonRecyclerAdapter.RecyclerViewHolder> implements IAdapter<T>, IData<T> {
 
     private final Context mContext;
     private final int     mLayoutResId;
     private final List<T> mData;
 
-    private OnItemClickListener     mItemClickListener;
-    private OnItemLongClickListener mItemLongClickListener;
+    private ArrayList<Integer>           mChildViewIds;
+    private ArrayList<ChildViewListener> mChildViewListeners;
+    private OnItemClickListener          mItemClickListener;
+    private OnItemLongClickListener      mItemLongClickListener;
 
     public CommonRecyclerAdapter(@NonNull Context context, int layoutResId) {
         this(context, layoutResId, null);
@@ -54,6 +59,7 @@ import static com.classic.adapter.BaseAdapterHelper.get;
     @Override public void onBindViewHolder(CommonRecyclerAdapter.RecyclerViewHolder holder, int position) {
         BaseAdapterHelper helper = holder.mAdapterHelper;
         helper.setAssociatedObject(getItem(position));
+        applyChildViewListeners(helper, holder.getAdapterPosition());
         onUpdate(helper, getItem(position), position);
     }
 
@@ -150,6 +156,7 @@ import static com.classic.adapter.BaseAdapterHelper.get;
      * 并且重写了 {@link android.support.v7.util.DiffUtil.Callback#getChangePayload} 方法
      * 使用方法见：<a href="https://github.com/qyxxjd/CommonAdapter/blob/master/app/src/main/java/com/classic/adapter/simple/activity/RecyclerViewSimpleActivity.java">RecyclerViewSimpleActivity</a>
      * </pre>
+     *
      * @param helper
      * @param payloads
      */
@@ -159,12 +166,57 @@ import static com.classic.adapter.BaseAdapterHelper.get;
         return position < 0 || position >= mData.size() ? null : mData.get(position);
     }
 
-    public void setOnItemClickListener(OnItemClickListener itemClickListener) {
+    public CommonRecyclerAdapter<T> setOnItemClickListener(OnItemClickListener itemClickListener) {
         this.mItemClickListener = itemClickListener;
+        return this;
     }
 
-    public void setOnItemLongClickListener(OnItemLongClickListener itemLongClickListener) {
+    public CommonRecyclerAdapter<T> setOnItemLongClickListener(OnItemLongClickListener itemLongClickListener) {
         this.mItemLongClickListener = itemLongClickListener;
+        return this;
+    }
+
+    public CommonRecyclerAdapter<T> addChildViewListener(@IdRes int viewId, @NonNull ChildViewListener listener) {
+        if (null == mChildViewIds || null == mChildViewListeners) {
+            mChildViewIds = new ArrayList<>();
+            mChildViewListeners = new ArrayList<>();
+        }
+        mChildViewIds.add(viewId);
+        mChildViewListeners.add(listener);
+        return this;
+    }
+
+    private void applyChildViewListeners(BaseAdapterHelper helper, final int position) {
+        if (null == helper || mChildViewIds.size() == 0) {
+            return;
+        }
+        int size = mChildViewIds.size();
+        for (int i = 0; i < size; i++) {
+            View view = helper.getView(mChildViewIds.get(i));
+            final ChildViewListener listener = mChildViewListeners.get(i);
+            if (null == view || null == listener) {
+                continue;
+            }
+            if (listener instanceof OnChildViewClickListener) {
+                view.setOnClickListener(new View.OnClickListener() {
+                    @Override public void onClick(View v) {
+                        ((OnChildViewClickListener)listener).onItemClick(v, position);
+                    }
+                });
+            } else if (listener instanceof OnChildViewLongClickListener) {
+                view.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override public boolean onLongClick(View v) {
+                        return ((OnChildViewLongClickListener)listener).onItemLongClick(v, position);
+                    }
+                });
+            } else if (listener instanceof OnChildViewTouchListener) {
+                view.setOnTouchListener(new View.OnTouchListener() {
+                    @Override public boolean onTouch(View v, MotionEvent event) {
+                        return ((OnChildViewTouchListener)listener).onTouch(v, event, position);
+                    }
+                });
+            }
+        }
     }
 
     public interface OnItemClickListener {
@@ -172,11 +224,26 @@ import static com.classic.adapter.BaseAdapterHelper.get;
     }
 
     public interface OnItemLongClickListener {
-        void onItemLongClick(RecyclerView.ViewHolder viewHolder, View view, int position);
+        boolean onItemLongClick(RecyclerView.ViewHolder viewHolder, View view, int position);
+    }
+
+    public interface ChildViewListener { }
+
+    public interface OnChildViewClickListener extends ChildViewListener {
+        void onItemClick(View view, int position);
+    }
+
+    public interface OnChildViewLongClickListener extends ChildViewListener {
+        boolean onItemLongClick(View view, int position);
+    }
+
+    public interface OnChildViewTouchListener extends ChildViewListener {
+        boolean onTouch(View v, MotionEvent event, int position);
     }
 
     protected final class RecyclerViewHolder extends RecyclerView.ViewHolder {
         BaseAdapterHelper mAdapterHelper;
+
         public RecyclerViewHolder(BaseAdapterHelper adapterHelper) {
             super(adapterHelper.getView());
             this.mAdapterHelper = adapterHelper;
@@ -184,23 +251,20 @@ import static com.classic.adapter.BaseAdapterHelper.get;
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override public void onClick(View v) {
                         mItemClickListener.onItemClick(RecyclerViewHolder.this, v, getAdapterPosition());
-
                     }
                 });
             }
             if (null != mItemLongClickListener) {
                 itemView.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override public boolean onLongClick(View v) {
-                        mItemLongClickListener.onItemLongClick(RecyclerViewHolder.this, v, getAdapterPosition());
-                        return true;
+                        return mItemLongClickListener.onItemLongClick(RecyclerViewHolder.this, v, getAdapterPosition());
                     }
                 });
             }
         }
     }
 
-    public static abstract class AbsScrollControl extends RecyclerView.OnScrollListener
-            implements IScrollHideListener {
+    public static abstract class AbsScrollControl extends RecyclerView.OnScrollListener implements IScrollHideListener {
         private static final int DEFAULT_SCROLL_HIDE_OFFSET = 20; //滑动隐藏的偏移量
 
         private int     mCurrentScrollOffset;
@@ -221,21 +285,18 @@ import static com.classic.adapter.BaseAdapterHelper.get;
         @Override public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
             super.onScrolled(recyclerView, dx, dy);
 
-            final int firstVisibleItemPosition = findFirstVisibleItemPosition(
-                    recyclerView.getLayoutManager());
+            final int firstVisibleItemPosition = findFirstVisibleItemPosition(recyclerView.getLayoutManager());
 
             if (firstVisibleItemPosition == 0 && !isControlVisible) {
                 onShow();
                 isControlVisible = true;
-            } else if (firstVisibleItemPosition != 0 &&
-                       mCurrentScrollOffset > getScrollHideOffset() &&
+            } else if (firstVisibleItemPosition != 0 && mCurrentScrollOffset > getScrollHideOffset() &&
                        isControlVisible) {
                 //向上滚动,并且视图为显示状态
                 onHide();
                 isControlVisible = false;
                 mCurrentScrollOffset = 0;
-            } else if (firstVisibleItemPosition != 0 &&
-                       mCurrentScrollOffset < -getScrollHideOffset() &&
+            } else if (firstVisibleItemPosition != 0 && mCurrentScrollOffset < -getScrollHideOffset() &&
                        !isControlVisible) {
                 //向下滚动,并且视图为隐藏状态
                 onShow();
@@ -252,12 +313,11 @@ import static com.classic.adapter.BaseAdapterHelper.get;
 
         private int findFirstVisibleItemPosition(RecyclerView.LayoutManager layoutManager) {
             if (layoutManager instanceof GridLayoutManager) {
-                return ((GridLayoutManager) layoutManager).findFirstVisibleItemPosition();
+                return ((GridLayoutManager)layoutManager).findFirstVisibleItemPosition();
             } else if (layoutManager instanceof LinearLayoutManager) {
-                return ((LinearLayoutManager) layoutManager).findFirstVisibleItemPosition();
+                return ((LinearLayoutManager)layoutManager).findFirstVisibleItemPosition();
             } else if (layoutManager instanceof StaggeredGridLayoutManager) {
-                return ((StaggeredGridLayoutManager) layoutManager).findFirstVisibleItemPositions(
-                        null)[0];
+                return ((StaggeredGridLayoutManager)layoutManager).findFirstVisibleItemPositions(null)[0];
             } else {
                 return getFirstVisibleItemPositions();
             }

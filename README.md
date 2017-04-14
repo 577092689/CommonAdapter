@@ -16,11 +16,15 @@
 
 ```gradle
 dependencies {
-    compile 'com.classic.adapter:commonadapter:1.7'
+    compile 'com.classic.adapter:commonadapter:1.8'
     //项目中使用到RecyclerView,需要添加依赖
     compile 'com.android.support:recyclerview-v7:25.3.1'
 }
 ```
+
+## v1.8 更新日志
+    1. 修改 `CommonRecyclerAdapter` 的 `OnItemLongClickListener` 回调事件返回值为 `boolean`.
+    2. `CommonRecyclerAdapter` 添加 `addChildViewListener(viewId, listener)` 方法, 支持：`OnChildViewClickListener` 、 `OnChildViewLongClickListener` 、 `OnChildViewTouchListener`.
 
 ## 开始使用
 
@@ -90,7 +94,7 @@ private final class MultipleLayoutAdapter extends CommonAdapter<News>{
 ```
 RecyclerView 使用示例
 
-[使用 DiffUtil 高效更新 RecyclerView 点这里](https://github.com/qyxxjd/CommonAdapter/blob/master/app/src/main/java/com/classic/adapter/simple/activity/RecyclerViewSimpleActivity.java)
+[使用 DiffUtil 高效更新 RecyclerView 示例代码，点这里](https://github.com/qyxxjd/CommonAdapter/blob/master/app/src/main/java/com/classic/adapter/simple/activity/RecyclerViewSimpleActivity.java)
 
 ```java
 List<News> newsList = ...;
@@ -160,26 +164,13 @@ private final class MultipleLayoutAdapter extends CommonRecyclerAdapter<News>{
 }
 ```
 
-RecyclerView item点击事件和长按事件
+RecyclerView 点击事件
 ```java
-commonRecyclerAdapter.setOnItemClickListener(new CommonRecyclerAdapter.OnItemClickListener() {
-    @Override
-    public void onItemClick(RecyclerView.ViewHolder viewHolder, View view, int position) {
-        // TODO ...
-    }
-});
-commonRecyclerAdapter.setOnItemLongClickListener(new CommonRecyclerAdapter.OnItemLongClickListener() {
-    @Override public void onItemLongClick(RecyclerView.ViewHolder viewHolder, View view, int position) {
-        // TODO ...
-    }
-});
-```
-
-CommonAdapter、CommonRecyclerAdapter区别
-```java
-CommonAdapter适用于：ListView/GridView
-CommonRecyclerAdapter适用于：RecyclerView
-使用方式都一样
+commonRecyclerAdapter.setOnItemClickListener(this) // 设置 item 点击事件
+                     .setOnItemLongClickListener(this) // 设置 item 长按事件
+                     // 设置 Child view 的点击、长按、Touch事件(方式一)
+                     // OnChildViewClickListener 、 OnChildViewLongClickListener 、 OnChildViewTouchListener
+                     .addChildViewListener(R.id.viewId, listener);
 ```
 
 BaseAdapterHelper 使用示例
@@ -214,7 +205,7 @@ helper.setText(R.id.viewId, text)
       .setMax(R.id.viewId, max)
       //ListView设置adapter
       .setAdapter(R.id.viewId, adapter)
-      //下面为View常用点击事件设置
+      // 设置 Child view 的点击、长按、Touch事件(方式二)
       .setOnTouchListener(R.id.viewId, onTouchListener)
       .setOnClickListener(R.id.viewId, onClickListener)
       .setOnLongClickListener(R.id.viewId, onLongClickListener)
