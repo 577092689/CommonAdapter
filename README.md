@@ -16,13 +16,13 @@
 
 ```gradle
 dependencies {
-    compile 'com.classic.adapter:commonadapter:1.8'
+    compile 'com.classic.adapter:commonadapter:1.8.1'
     //项目中使用到RecyclerView,需要添加依赖
     compile 'com.android.support:recyclerview-v7:25.3.1'
 }
 ```
 
-## v1.8 更新日志
+## v1.8.1 更新日志
 
 1. 修改 `CommonRecyclerAdapter` 的 `OnItemLongClickListener` 回调事件返回值为 `boolean`.
 2. `CommonRecyclerAdapter` 添加 `addChildViewListener(viewId, listener)` 方法, 支持：`OnChildViewClickListener` 、 `OnChildViewLongClickListener` 、 `OnChildViewTouchListener`.

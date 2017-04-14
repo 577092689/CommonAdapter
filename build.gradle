@@ -29,7 +29,7 @@ ext {
     projectDesc = 'android common adapter'
     projectGroup = 'com.classic.adapter'
     projectArtifactId = 'commonadapter'
-    projectVersion = '1.8'
+    projectVersion = '1.8.1'
 
     orgName = 'xxjd'
     repoName = 'maven'

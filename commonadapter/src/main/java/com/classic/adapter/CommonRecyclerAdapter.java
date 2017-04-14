@@ -32,14 +32,15 @@ import static com.classic.adapter.BaseAdapterHelper.get;
 @SuppressWarnings({"WeakerAccess", "unused"}) public abstract class CommonRecyclerAdapter<T>
         extends RecyclerView.Adapter<CommonRecyclerAdapter.RecyclerViewHolder> implements IAdapter<T>, IData<T> {
 
+    private final ArrayList<Integer>           mChildViewIds       = new ArrayList<>();
+    private final ArrayList<ChildViewListener> mChildViewListeners = new ArrayList<>();
+
     private final Context mContext;
     private final int     mLayoutResId;
     private final List<T> mData;
 
-    private ArrayList<Integer>           mChildViewIds;
-    private ArrayList<ChildViewListener> mChildViewListeners;
-    private OnItemClickListener          mItemClickListener;
-    private OnItemLongClickListener      mItemLongClickListener;
+    private OnItemClickListener     mItemClickListener;
+    private OnItemLongClickListener mItemLongClickListener;
 
     public CommonRecyclerAdapter(@NonNull Context context, int layoutResId) {
         this(context, layoutResId, null);
@@ -177,10 +178,6 @@ import static com.classic.adapter.BaseAdapterHelper.get;
     }
 
     public CommonRecyclerAdapter<T> addChildViewListener(@IdRes int viewId, @NonNull ChildViewListener listener) {
-        if (null == mChildViewIds || null == mChildViewListeners) {
-            mChildViewIds = new ArrayList<>();
-            mChildViewListeners = new ArrayList<>();
-        }
         mChildViewIds.add(viewId);
         mChildViewListeners.add(listener);
         return this;
