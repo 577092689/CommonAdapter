@@ -22,7 +22,7 @@ android {
 }
 
 dependencies {
-    provided rootProject.ext.supportRecyclerView
+    compileOnly rootProject.ext.supportRecyclerView
 }
 
 //apply from: 'maven.gradle'

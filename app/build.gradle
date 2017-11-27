@@ -19,12 +19,11 @@ android {
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile rootProject.ext.supportAppcompatV7
-    compile rootProject.ext.supportRecyclerView
-    compile rootProject.ext.glide
-    compile rootProject.ext.picasso
-    compile rootProject.ext.commonAdapter
+    implementation rootProject.ext.supportAppcompatV7
+    implementation rootProject.ext.supportRecyclerView
+    implementation rootProject.ext.glide
+    implementation rootProject.ext.picasso
+//    implementation rootProject.ext.commonAdapter
 
-//    compile project(':commonadapter')
+    implementation project(':commonadapter')
 }

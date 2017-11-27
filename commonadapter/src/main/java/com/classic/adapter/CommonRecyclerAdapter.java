@@ -148,6 +148,9 @@ import static com.classic.adapter.BaseAdapterHelper.get;
         }
     }
 
+    /** ViewHolder创建时回调 */
+    public void onCreate(RecyclerView.ViewHolder viewHolder, BaseAdapterHelper helper) { }
+
     /**
      * 更小粒度的更新，比如某个对象的某个属性值改变了，只改变此属性
      *
@@ -240,10 +243,10 @@ import static com.classic.adapter.BaseAdapterHelper.get;
 
     protected final class RecyclerViewHolder extends RecyclerView.ViewHolder {
         BaseAdapterHelper mAdapterHelper;
-
         public RecyclerViewHolder(BaseAdapterHelper adapterHelper) {
             super(adapterHelper.getView());
             this.mAdapterHelper = adapterHelper;
+            onCreate(this, adapterHelper);
             if (null != mItemClickListener) {
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override public void onClick(View v) {
