@@ -1,16 +1,16 @@
-def supportVersion = "27.0.1"
-def glideVersion = "4.3.0"
+def supportVersion = "27.0.2"
+def glideVersion = "4.5.0"
 
 ext {
 
     android = [
             compileSdkVersion: 27,
-            buildToolsVersion: "27.0.1",
+            buildToolsVersion: "27.0.2",
             applicationId    : "com.classic.adapter.simple",
             minSdkVersion    : 14,
             targetSdkVersion : 25,
-            versionCode      : 20,
-            versionName      : "1.9"
+            versionCode      : 21,
+            versionName      : "2.0"
     ]
 
     //官方库
@@ -27,5 +27,5 @@ ext {
     glideCompiler = "com.github.bumptech.glide:compiler:${glideVersion}"
     picasso = "com.squareup.picasso:picasso:2.5.2"
 
-    commonAdapter = "com.classic.adapter:commonadapter:1.9"
+    commonAdapter = "com.classic.adapter:commonadapter:2.0"
 }

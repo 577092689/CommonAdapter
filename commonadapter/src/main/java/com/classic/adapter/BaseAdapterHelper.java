@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2013 Joan Zapata
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -34,12 +34,12 @@ import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.annotation.StringRes;
 import android.support.v4.text.util.LinkifyCompat;
+import android.support.v7.widget.RecyclerView;
 import android.text.util.Linkify;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AlphaAnimation;
 import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.CheckedTextView;
@@ -48,14 +48,14 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.TextView;
-
 import com.classic.adapter.interfaces.ImageLoad;
 
 /**
  * @author Joan Zapata
  *         Allows an abstraction of the ViewHolder pattern.
  */
-@SuppressWarnings("unused") public class BaseAdapterHelper {
+@SuppressWarnings({"unused", "WeakerAccess", "UnusedReturnValue"})
+public class BaseAdapterHelper {
 
     /** Views indexed with their IDs */
     private final SparseArray<View> mViews;
@@ -301,15 +301,7 @@ import com.classic.adapter.interfaces.ImageLoad;
      * Alpha between 0-1.
      */
     public BaseAdapterHelper setAlpha(@IdRes int viewId, @FloatRange(from = 0.0, to = 1.0) float value) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            retrieveView(viewId).setAlpha(value);
-        } else {
-            // Pre-honeycomb hack to set Alpha value
-            AlphaAnimation alpha = new AlphaAnimation(value, value);
-            alpha.setDuration(0);
-            alpha.setFillAfter(true);
-            retrieveView(viewId).startAnimation(alpha);
-        }
+        retrieveView(viewId).setAlpha(value);
         return this;
     }
 
@@ -348,7 +340,7 @@ import com.classic.adapter.interfaces.ImageLoad;
     /**
      * Add All links into a TextView.
      *
-     * @param viewId The id of the TextView to linkify.
+     * @param viewId TextView id.
      * @return The BaseAdapterHelper for chaining.
      */
     public BaseAdapterHelper addAllLinks(@IdRes int viewId) {
@@ -359,7 +351,7 @@ import com.classic.adapter.interfaces.ImageLoad;
     /**
      * Add links into a TextView.
      *
-     * @param viewId The id of the TextView to linkify.
+     * @param viewId TextView id.
      * @return The BaseAdapterHelper for chaining.
      * @see android.text.util.Linkify#addLinks(TextView text, int mask)
      */
@@ -369,7 +361,7 @@ import com.classic.adapter.interfaces.ImageLoad;
         return this;
     }
 
-    /** Apply the typeface to the given viewId, and enable subpixel rendering. */
+    /** Apply the typeface to the given viewId, and enable sub pixel rendering. */
     public BaseAdapterHelper setTypeface(@IdRes int viewId, @NonNull Typeface typeface) {
         TextView view = retrieveView(viewId);
         view.setTypeface(typeface);
@@ -377,13 +369,18 @@ import com.classic.adapter.interfaces.ImageLoad;
         return this;
     }
 
-    /** Apply the typeface to all the given viewIds, and enable subpixel rendering. */
+    /** Apply the typeface to all the given viewIds, and enable sub pixel rendering. */
     public BaseAdapterHelper setTypeface(@NonNull Typeface typeface, @IdRes int... viewIds) {
         for (int viewId : viewIds) {
-            TextView view = retrieveView(viewId);
-            view.setTypeface(typeface);
-            view.setPaintFlags(view.getPaintFlags() | Paint.SUBPIXEL_TEXT_FLAG);
+            setTypeface(viewId, typeface);
         }
+        return this;
+    }
+
+    public BaseAdapterHelper setTypeface(@IdRes int viewId, Typeface typeface, int style) {
+        TextView view = retrieveView(viewId);
+        view.setTypeface(typeface, style);
+        view.setPaintFlags(view.getPaintFlags() | Paint.SUBPIXEL_TEXT_FLAG);
         return this;
     }
 
@@ -507,6 +504,11 @@ import com.classic.adapter.interfaces.ImageLoad;
         return this;
     }
 
+    public BaseAdapterHelper setAdapter(@IdRes int viewId, @NonNull RecyclerView.Adapter<RecyclerView.ViewHolder> adapter) {
+        ((RecyclerView)retrieveView(viewId)).setAdapter(adapter);
+        return this;
+    }
+
     /**
      * Sets the on click listener of the view.
      *
@@ -544,7 +546,7 @@ import com.classic.adapter.interfaces.ImageLoad;
     }
 
     /**
-     * Sets the listview or gridview's item click listener of the view
+     * Sets the ListView or GridView's item click listener of the view
      *
      * @param viewId The view id.
      * @param listener The item on click listener;
@@ -557,7 +559,7 @@ import com.classic.adapter.interfaces.ImageLoad;
     }
 
     /**
-     * Sets the listview or gridview's item long click listener of the view
+     * Sets the ListView or GridView's item long click listener of the view
      *
      * @param viewId The view id.
      * @param listener The item long click listener;
@@ -570,7 +572,7 @@ import com.classic.adapter.interfaces.ImageLoad;
     }
 
     /**
-     * Sets the listview or gridview's item selected click listener of the view
+     * Sets the ListView or GridView's item selected click listener of the view
      *
      * @param viewId The view id.
      * @param listener The item selected click listener;

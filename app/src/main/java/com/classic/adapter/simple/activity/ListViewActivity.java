@@ -8,7 +8,7 @@ import com.classic.adapter.BaseAdapterHelper;
 import com.classic.adapter.CommonAdapter;
 import com.classic.adapter.simple.R;
 import com.classic.adapter.simple.bean.News;
-import com.classic.adapter.simple.consts.Consts;
+import com.classic.adapter.simple.consts.Const;
 import com.classic.adapter.simple.data.NewsDataSource;
 
 import java.util.Date;
@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.Locale;
 
 public class ListViewActivity extends DemoActivity {
-    private ListView              mListView;
     private MultipleLayoutAdapter mAdapter;
 
     @Override protected boolean canBack() {
@@ -54,10 +53,10 @@ public class ListViewActivity extends DemoActivity {
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mToolbar.setTitle(R.string.main_listview_lable);
-        mListView = (ListView) findViewById(R.id.listview);
+        ListView listView = findViewById(R.id.listview);
         mAdapter = new MultipleLayoutAdapter(this, R.layout.item_none_picture,
                 NewsDataSource.getNewsList());
-        mListView.setAdapter(mAdapter);
+        listView.setAdapter(mAdapter);
     }
 
     private final class MultipleLayoutAdapter extends CommonAdapter<News> {
@@ -87,23 +86,23 @@ public class ListViewActivity extends DemoActivity {
                 case News.TYPE_NONE_PICTURE:
                     helper.setText(R.id.item_none_picture_title, item.getTitle())
                           .setText(R.id.item_none_picture_author,
-                                  String.format(Locale.CHINA, Consts.FORMAT_AUTHOR,
-                                          item.getAuthor()))
+                                  String.format(Locale.CHINA, Const.FORMAT_AUTHOR,
+                                                item.getAuthor()))
                           .setText(R.id.item_none_picture_date,
-                                  Consts.DATE_FORMAT.format(new Date(item.getReleaseTime())))
+                                   Const.DATE_FORMAT.format(new Date(item.getReleaseTime())))
                           .setText(R.id.item_none_picture_intro, item.getIntro());
                     break;
                 case News.TYPE_SINGLE_PICTURE:
                     helper.setText(R.id.item_single_picture_title, item.getTitle())
                           .setText(R.id.item_single_picture_author,
-                                  String.format(Locale.CHINA, Consts.FORMAT_AUTHOR,
-                                          item.getAuthor()))
+                                  String.format(Locale.CHINA, Const.FORMAT_AUTHOR,
+                                                item.getAuthor()))
                           .setText(R.id.item_single_picture_date,
-                                  Consts.DATE_FORMAT.format(new Date(item.getReleaseTime())))
+                                   Const.DATE_FORMAT.format(new Date(item.getReleaseTime())))
                           .setImageUrl(R.id.item_single_picture_cover, item.getCoverUrl());
                     break;
                 case News.TYPE_MULTIPLE_PICTURE:
-                    String[] urls = item.getCoverUrl().split(Consts.URL_SEPARATOR);
+                    String[] urls = item.getCoverUrl().split(Const.URL_SEPARATOR);
                     helper.setText(R.id.item_multiple_picture_intro, item.getIntro())
                           .setImageUrl(R.id.item_multiple_picture_cover_left, urls[0])
                           .setImageUrl(R.id.item_multiple_picture_cover_right, urls[1]);

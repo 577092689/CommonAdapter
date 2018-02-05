@@ -32,7 +32,7 @@ public abstract class DemoActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(getLayoutResId());
         mAppContext = getApplicationContext();
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        mToolbar = findViewById(R.id.toolbar);
         if (mToolbar == null) {
             throw new IllegalStateException("No Toolbar");
         }

@@ -25,7 +25,7 @@ import com.classic.adapter.interfaces.ImageLoad;
         return mImageLoadImpl;
     }
 
-    public static Adapter config(@NonNull Builder builder) {
+    public static void config(@NonNull Builder builder) {
         if (singleton == null) {
             synchronized (Adapter.class) {
                 if (singleton == null) {
@@ -33,7 +33,6 @@ import com.classic.adapter.interfaces.ImageLoad;
                 }
             }
         }
-        return singleton;
     }
 
     public static final class Builder {

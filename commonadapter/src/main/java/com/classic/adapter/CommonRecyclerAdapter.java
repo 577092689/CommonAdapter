@@ -32,14 +32,14 @@ import static com.classic.adapter.BaseAdapterHelper.get;
 @SuppressWarnings({"WeakerAccess", "unused"}) public abstract class CommonRecyclerAdapter<T>
         extends RecyclerView.Adapter<CommonRecyclerAdapter.RecyclerViewHolder> implements IAdapter<T>, IData<T> {
 
-    private final ArrayList<Integer>           mChildViewIds       = new ArrayList<>();
+    private final ArrayList<Integer> mChildViewIds = new ArrayList<>();
     private final ArrayList<ChildViewListener> mChildViewListeners = new ArrayList<>();
 
     private final Context mContext;
-    private final int     mLayoutResId;
+    private final int mLayoutResId;
     private final List<T> mData;
 
-    private OnItemClickListener     mItemClickListener;
+    private OnItemClickListener mItemClickListener;
     private OnItemLongClickListener mItemLongClickListener;
 
     public CommonRecyclerAdapter(@NonNull Context context, int layoutResId) {
@@ -131,21 +131,30 @@ import static com.classic.adapter.BaseAdapterHelper.get;
         replaceAll(item, true);
     }
 
+    /**
+     * 替换数据
+     *
+     * @param item 新数据列表
+     * @param notifyDataSetChanged 是否执行：notifyItem...方法
+     */
+    public void replaceAll(@NonNull List<T> item, boolean notifyDataSetChanged) {
+        if (notifyDataSetChanged) {
+            clear();
+            addAll(item);
+        } else {
+            mData.clear();
+            mData.addAll(item);
+        }
+    }
+
     @Override public boolean contains(@NonNull T item) {
         return mData.contains(item);
     }
 
     @Override public void clear() {
+        final int size = mData.size();
         mData.clear();
-        notifyDataSetChanged();
-    }
-
-    public void replaceAll(@NonNull List<T> elem, boolean notifyDataSetChanged) {
-        mData.clear();
-        mData.addAll(elem);
-        if (notifyDataSetChanged) {
-            notifyDataSetChanged();
-        }
+        notifyItemRangeRemoved(0, size);
     }
 
     /** ViewHolder创建时回调 */
@@ -161,8 +170,8 @@ import static com.classic.adapter.BaseAdapterHelper.get;
      * 使用方法见：<a href="https://github.com/qyxxjd/CommonAdapter/blob/master/app/src/main/java/com/classic/adapter/simple/activity/RecyclerViewSimpleActivity.java">RecyclerViewSimpleActivity</a>
      * </pre>
      *
-     * @param helper
-     * @param payloads
+     * @param helper {@link BaseAdapterHelper}
+     * @param payloads {@link RecyclerView.Adapter#onBindViewHolder}
      */
     public void onItemContentChanged(@NonNull BaseAdapterHelper helper, @NonNull List<Object> payloads) { }
 

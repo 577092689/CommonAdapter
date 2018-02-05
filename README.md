@@ -16,8 +16,8 @@
 
 ```gradle
 dependencies {
-    implementation 'com.classic.adapter:commonadapter:1.9'
-    implementation 'com.android.support:recyclerview-v7:27.0.1'
+    implementation 'com.classic.adapter:commonadapter:2.0'
+    implementation 'com.android.support:recyclerview-v7:27.0.2'
 }
 ```
 
@@ -107,6 +107,10 @@ private class NewsAdapter extends CommonRecyclerAdapter<News>{
         super(context, layoutResId, data);
     }
 
+    @Override public void onCreate(RecyclerView.ViewHolder viewHolder, BaseAdapterHelper helper) {
+        // ViewHolder创建时回调
+    }
+
     @Override public void onUpdate(BaseAdapterHelper helper, News item, int position) {
         helper.setText(R.id.xxx, item.getTitle())
               .setImageUrl(R.id.xxx,item.getCoverUrl());
@@ -119,6 +123,11 @@ private final class MultipleLayoutAdapter extends CommonRecyclerAdapter<News>{
     public MultipleLayoutAdapter(Context context, int layoutResId, List<News> data) {
         super(context, layoutResId, data);
     }
+
+    @Override public void onCreate(RecyclerView.ViewHolder viewHolder, BaseAdapterHelper helper) {
+        // ViewHolder创建时回调
+    }
+
     //多种布局重写此方法即可
     @Override public int getLayoutResId(News item, int position) {
         int layoutResId = -1;
@@ -198,7 +207,7 @@ helper.setText(R.id.viewId, text)
       .setVisible(R.id.viewId, View.VISIBLE)
       //ProgressBar设置Max
       .setMax(R.id.viewId, max)
-      //ListView设置adapter
+      //ListView、RecyclerView设置adapter
       .setAdapter(R.id.viewId, adapter)
       // 设置 Child view 的点击、长按、Touch事件(方式二)
       .setOnTouchListener(R.id.viewId, onTouchListener)

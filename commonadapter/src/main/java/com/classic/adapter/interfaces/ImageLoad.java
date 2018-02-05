@@ -14,5 +14,12 @@ import android.widget.ImageView;
  */
 public interface ImageLoad {
 
+    /**
+     * 加载图片
+     *
+     * @param context Context
+     * @param imageView ImageView
+     * @param imageUrl 图片地址
+     */
     void load(@NonNull Context context, @NonNull ImageView imageView, @NonNull String imageUrl);
 }

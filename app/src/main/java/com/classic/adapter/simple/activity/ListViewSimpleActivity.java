@@ -7,14 +7,13 @@ import com.classic.adapter.BaseAdapterHelper;
 import com.classic.adapter.CommonAdapter;
 import com.classic.adapter.simple.R;
 import com.classic.adapter.simple.bean.News;
-import com.classic.adapter.simple.consts.Consts;
+import com.classic.adapter.simple.consts.Const;
 import com.classic.adapter.simple.data.NewsDataSource;
 
 import java.util.Date;
 import java.util.Locale;
 
 public class ListViewSimpleActivity extends DemoActivity {
-    private ListView mListView;
 
     @Override protected boolean canBack() {
         return true;
@@ -51,8 +50,8 @@ public class ListViewSimpleActivity extends DemoActivity {
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mToolbar.setTitle(R.string.main_listview_simple_lable);
-        mListView = (ListView) findViewById(R.id.listview);
-        mListView.setAdapter(mAdapter);
+        ListView listView = findViewById(R.id.listview);
+        listView.setAdapter(mAdapter);
     }
 
     private CommonAdapter<News> mAdapter = new CommonAdapter<News>(this, R.layout.item_none_picture,
@@ -60,9 +59,9 @@ public class ListViewSimpleActivity extends DemoActivity {
         @Override public void onUpdate(BaseAdapterHelper helper, News item, int position) {
             helper.setText(R.id.item_none_picture_title, item.getTitle())
                   .setText(R.id.item_none_picture_author,
-                          String.format(Locale.CHINA, Consts.FORMAT_AUTHOR, item.getAuthor()))
+                          String.format(Locale.CHINA, Const.FORMAT_AUTHOR, item.getAuthor()))
                   .setText(R.id.item_none_picture_date,
-                          Consts.DATE_FORMAT.format(new Date(item.getReleaseTime())))
+                           Const.DATE_FORMAT.format(new Date(item.getReleaseTime())))
                   .setText(R.id.item_none_picture_intro, item.getIntro());
         }
     };

@@ -15,10 +15,8 @@ import com.classic.adapter.BaseAdapterHelper;
 import com.classic.adapter.CommonRecyclerAdapter;
 import com.classic.adapter.simple.R;
 import com.classic.adapter.simple.bean.News;
-import com.classic.adapter.simple.consts.Consts;
+import com.classic.adapter.simple.consts.Const;
 import com.classic.adapter.simple.data.NewsDataSource;
-
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -27,12 +25,11 @@ public class RecyclerViewSimpleActivity extends DemoActivity
         implements CommonRecyclerAdapter.OnItemClickListener,
                    CommonRecyclerAdapter.OnItemLongClickListener {
 
-    private static final String KEY_TITLE     = "title";
-    private static final String KEY_INTRO     = "intro";
-    private static final String KEY_AUTHOR    = "author";
+    private static final String KEY_TITLE = "title";
+    private static final String KEY_INTRO = "intro";
+    private static final String KEY_AUTHOR = "author";
 
-    private RecyclerView mRecyclerView;
-    private NewsAdapter  mNewsAdapter;
+    private NewsAdapter mNewsAdapter;
 
     @Override protected boolean canBack() {
         return true;
@@ -59,10 +56,11 @@ public class RecyclerViewSimpleActivity extends DemoActivity
     }
 
     @Override protected void testReplaceAll() {
-        final ArrayList<News> newData = NewsDataSource.getSimpleReplaceList(10);
+        final List<News> oldData = mNewsAdapter.getData();
+        final List<News> newData = NewsDataSource.getSimpleReplaceList(oldData.size());
         final DiffUtil.Callback callback = new DiffUtil.Callback() {
             @Override public int getOldListSize() {
-                return mNewsAdapter.getData().size();
+                return oldData.size();
             }
 
             @Override public int getNewListSize() {
@@ -71,23 +69,19 @@ public class RecyclerViewSimpleActivity extends DemoActivity
 
             @Override public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
                 //判断对象是否相等
-                return mNewsAdapter.getItem(oldItemPosition).getId() ==
-                       newData.get(newItemPosition).getId();
+                return oldData.get(oldItemPosition).getId() == newData.get(newItemPosition).getId();
             }
 
             @Override public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
                 //判断对象的内容是否相等
-                return mNewsAdapter.getItem(oldItemPosition).getTitle().equals(
-                        newData.get(newItemPosition).getTitle()) &&
-                       mNewsAdapter.getItem(oldItemPosition).getIntro().equals(
-                               newData.get(newItemPosition).getIntro());
+                return oldData.get(oldItemPosition).getTitle().equals(newData.get(newItemPosition).getTitle());
             }
 
             // 更小粒度的更新，比如某个对象的某个属性值改变了，只改变此属性
             // 此方法为可选，这里只是提供一个使用示例
             @Nullable @Override
             public Object getChangePayload(int oldItemPosition, int newItemPosition) {
-                final News oldItem = mNewsAdapter.getItem(oldItemPosition);
+                final News oldItem = oldData.get(oldItemPosition);
                 final News newItem = newData.get(newItemPosition);
                 Bundle bundle = new Bundle();
                 if(!oldItem.getTitle().equals(newItem.getTitle())){
@@ -102,17 +96,9 @@ public class RecyclerViewSimpleActivity extends DemoActivity
                 return bundle.size() == 0 ? null : bundle;
             }
         };
-        new Thread(new Runnable() {
-            @Override public void run() {
-                final DiffUtil.DiffResult result = DiffUtil.calculateDiff(callback, true);
-                runOnUiThread(new Runnable() {
-                    @Override public void run() {
-                        mNewsAdapter.replaceAll(newData, false);
-                        result.dispatchUpdatesTo(mNewsAdapter);
-                    }
-                });
-            }
-        }).start();
+        DiffUtil.DiffResult result = DiffUtil.calculateDiff(callback, true);
+        result.dispatchUpdatesTo(mNewsAdapter);
+        mNewsAdapter.replaceAll(newData, false);
     }
 
     @Override protected void testClear() {
@@ -122,15 +108,15 @@ public class RecyclerViewSimpleActivity extends DemoActivity
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mToolbar.setTitle(R.string.main_recyclerview_simple_lable);
-        mRecyclerView = (RecyclerView) findViewById(R.id.recyclerview);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        RecyclerView recyclerView = findViewById(R.id.recyclerview);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
         mNewsAdapter = new NewsAdapter(this, R.layout.item_none_picture,
                                        NewsDataSource.getNewsList());
         mNewsAdapter.setOnItemClickListener(this);
         mNewsAdapter.setOnItemLongClickListener(this);
-        mRecyclerView.setAdapter(mNewsAdapter);
+        recyclerView.setAdapter(mNewsAdapter);
     }
 
     @Override public void onItemClick(RecyclerView.ViewHolder viewHolder, View view, int position) {
@@ -154,18 +140,15 @@ public class RecyclerViewSimpleActivity extends DemoActivity
         @Override public void onUpdate(BaseAdapterHelper helper, News item, int position) {
             helper.setText(R.id.item_none_picture_title, item.getTitle())
                   .setText(R.id.item_none_picture_author,
-                          String.format(Locale.CHINA, Consts.FORMAT_AUTHOR, item.getAuthor()))
+                          String.format(Locale.CHINA, Const.FORMAT_AUTHOR, item.getAuthor()))
                   .setText(R.id.item_none_picture_date,
-                          Consts.DATE_FORMAT.format(new Date(item.getReleaseTime())))
+                           Const.DATE_FORMAT.format(new Date(item.getReleaseTime())))
                   .setText(R.id.item_none_picture_intro, item.getIntro());
         }
 
         /**
          * 更小粒度的更新，比如某个对象的某个属性值改变了，只改变此属性
          * 如果你重写了DiffUtil.Callback的getChangePayload方法，此回调才会执行
-         *
-         * @param helper
-         * @param payloads
          */
         @Override public void onItemContentChanged(
                 @NonNull BaseAdapterHelper helper, @NonNull List<Object> payloads) {

@@ -15,18 +15,17 @@ public interface IAdapter<T> {
     /**
      * 数据更新回调
      *
-     * @param helper
-     * @param item
-     * @param position
+     * @param helper {@link BaseAdapterHelper}
+     * @param item 当前Item对象
+     * @param position 下标
      */
     void onUpdate(BaseAdapterHelper helper, T item, int position);
 
     /**
      * 当前Item的布局文件
      *
-     * @param item
-     * @param position
-     * @return
+     * @param item 当前Item对象
+     * @param position 下标
      */
     int getLayoutResId(T item, int position);
 }

@@ -14,11 +14,9 @@ import com.classic.adapter.CommonRecyclerAdapter;
 import com.classic.adapter.interfaces.ImageLoad;
 import com.classic.adapter.simple.R;
 import com.classic.adapter.simple.bean.News;
-import com.classic.adapter.simple.consts.Consts;
+import com.classic.adapter.simple.consts.Const;
 import com.classic.adapter.simple.data.NewsDataSource;
 import com.classic.adapter.simple.imageload.PicassoImageLoad;
-
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -27,7 +25,6 @@ public class RecyclerViewActivity extends DemoActivity
         implements CommonRecyclerAdapter.OnItemClickListener,
                    CommonRecyclerAdapter.OnItemLongClickListener {
 
-    private RecyclerView mRecyclerView;
     private NewsAdapter  mNewsAdapter;
     private ImageLoad    mImageLoad;
 
@@ -56,10 +53,11 @@ public class RecyclerViewActivity extends DemoActivity
     }
 
     @Override protected void testReplaceAll() {
-        final ArrayList<News> newData = NewsDataSource.getReplaceList();
+        final List<News> oldData = mNewsAdapter.getData();
+        final List<News> newData = NewsDataSource.getSimpleReplaceList(oldData.size());
         final DiffUtil.Callback callback = new DiffUtil.Callback() {
             @Override public int getOldListSize() {
-                return mNewsAdapter.getData().size();
+                return oldData.size();
             }
 
             @Override public int getNewListSize() {
@@ -68,29 +66,17 @@ public class RecyclerViewActivity extends DemoActivity
 
             @Override public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
                 //判断对象是否相等
-                return mNewsAdapter.getItem(oldItemPosition).getId() ==
-                        newData.get(newItemPosition).getId();
+                return oldData.get(oldItemPosition).getId() == newData.get(newItemPosition).getId();
             }
 
             @Override public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
                 //判断对象的内容是否相等
-                return mNewsAdapter.getItem(oldItemPosition).getTitle().equals(
-                                newData.get(newItemPosition).getTitle()) &&
-                        mNewsAdapter.getItem(oldItemPosition).getIntro().equals(
-                                newData.get(newItemPosition).getIntro());
+                return oldData.get(oldItemPosition).getTitle().equals(newData.get(newItemPosition).getTitle());
             }
         };
-        new Thread(new Runnable() {
-            @Override public void run() {
-                final DiffUtil.DiffResult result = DiffUtil.calculateDiff(callback, true);
-                runOnUiThread(new Runnable() {
-                    @Override public void run() {
-                        mNewsAdapter.replaceAll(newData, false);
-                        result.dispatchUpdatesTo(mNewsAdapter);
-                    }
-                });
-            }
-        }).start();
+        DiffUtil.DiffResult result = DiffUtil.calculateDiff(callback, true);
+        result.dispatchUpdatesTo(mNewsAdapter);
+        mNewsAdapter.replaceAll(newData, false);
     }
 
     @Override protected void testClear() {
@@ -102,12 +88,12 @@ public class RecyclerViewActivity extends DemoActivity
         mToolbar.setTitle(R.string.main_recyclerview_lable);
         //某个页面单独使用一套图片加载示例
         mImageLoad = new PicassoImageLoad();
-        mRecyclerView = (RecyclerView) findViewById(R.id.recyclerview);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        RecyclerView recyclerView = findViewById(R.id.recyclerview);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
         mNewsAdapter = new NewsAdapter(this, R.layout.item_none_picture,
                 NewsDataSource.getNewsList());
-        mRecyclerView.setAdapter(mNewsAdapter);
+        recyclerView.setAdapter(mNewsAdapter);
 
         mNewsAdapter.setOnItemClickListener(this)
                     .setOnItemLongClickListener(this)
@@ -146,6 +132,12 @@ public class RecyclerViewActivity extends DemoActivity
             super(context, layoutResId, data);
         }
 
+        @Override
+        public void onCreate(RecyclerView.ViewHolder viewHolder, BaseAdapterHelper helper) {
+            super.onCreate(viewHolder, helper);
+            // ViewHolder创建时回调
+        }
+
         @Override public int getLayoutResId(News item, int position) {
             int layoutResId = -1;
             switch (item.getNewsType()) {
@@ -168,19 +160,19 @@ public class RecyclerViewActivity extends DemoActivity
                 case News.TYPE_NONE_PICTURE:
                     helper.setText(R.id.item_none_picture_title, item.getTitle())
                           .setText(R.id.item_none_picture_author,
-                                  String.format(Locale.CHINA, Consts.FORMAT_AUTHOR,
-                                          item.getAuthor()))
+                                  String.format(Locale.CHINA, Const.FORMAT_AUTHOR,
+                                                item.getAuthor()))
                           .setText(R.id.item_none_picture_date,
-                                  Consts.DATE_FORMAT.format(new Date(item.getReleaseTime())))
+                                   Const.DATE_FORMAT.format(new Date(item.getReleaseTime())))
                           .setText(R.id.item_none_picture_intro, item.getIntro());
                     break;
                 case News.TYPE_SINGLE_PICTURE:
                     helper.setText(R.id.item_single_picture_title, item.getTitle())
                           .setText(R.id.item_single_picture_author,
-                                  String.format(Locale.CHINA, Consts.FORMAT_AUTHOR,
-                                          item.getAuthor()))
+                                  String.format(Locale.CHINA, Const.FORMAT_AUTHOR,
+                                                item.getAuthor()))
                           .setText(R.id.item_single_picture_date,
-                                  Consts.DATE_FORMAT.format(new Date(item.getReleaseTime())))
+                                   Const.DATE_FORMAT.format(new Date(item.getReleaseTime())))
                           .setImageUrl(R.id.item_single_picture_cover, item.getCoverUrl());
                           // 设置Child view点击事件(方式二)
                           // .setOnClickListener(R.id.item_single_picture_cover, new View.OnClickListener() {
@@ -191,7 +183,7 @@ public class RecyclerViewActivity extends DemoActivity
                           // });
                     break;
                 case News.TYPE_MULTIPLE_PICTURE:
-                    String[] urls = item.getCoverUrl().split(Consts.URL_SEPARATOR);
+                    String[] urls = item.getCoverUrl().split(Const.URL_SEPARATOR);
                     helper.setText(R.id.item_multiple_picture_intro, item.getIntro())
                           .setImageUrl(R.id.item_multiple_picture_cover_left, urls[0])
                           .setImageUrl(R.id.item_multiple_picture_cover_right, urls[1]);

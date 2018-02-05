@@ -23,7 +23,7 @@ dependencies {
     implementation rootProject.ext.supportRecyclerView
     implementation rootProject.ext.glide
     implementation rootProject.ext.picasso
-//    implementation rootProject.ext.commonAdapter
+    implementation rootProject.ext.commonAdapter
 
-    implementation project(':commonadapter')
+//    implementation project(':commonadapter')
 }

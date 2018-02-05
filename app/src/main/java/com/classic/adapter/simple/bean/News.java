@@ -1,5 +1,6 @@
 package com.classic.adapter.simple.bean;
 
+@SuppressWarnings("unused")
 public class News {
 
     /** 单图布局样式 */
@@ -16,8 +17,6 @@ public class News {
     private String author;
     private long   releaseTime;
     private int    newsType;
-
-    public News(){}
 
     public News(long id, int newsType, String author, String title, String intro) {
         this(id, newsType,author,title,intro,"");
